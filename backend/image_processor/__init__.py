@@ -1,7 +1,8 @@
 import os, sys
 import argparse
-import cv2 as cv
-import intensity, output
+import cv2 as cv    
+import intensity
+import output
 
 
 DEFAULT_IMGPATH = os.path.join(os.getcwd(), "imgs")
