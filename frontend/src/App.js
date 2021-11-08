@@ -1,9 +1,14 @@
-import './App.css';
+import { MenuBar } from './components/MenuBar'
+import { Canvas } from './components/Canvas'
+import './styles/App.css';
 
 function App() {
   return (
     <>
-      Hello World
+      <MenuBar />
+
+      <Canvas />
+
     </>
   )
 }
