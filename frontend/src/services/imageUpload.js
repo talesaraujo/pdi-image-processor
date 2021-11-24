@@ -1,9 +1,13 @@
 import { api } from './api'
 
 export function imageUpload(img) {
+    let data = new FormData()
+
+    data.append('image_file', img, img.name)
+
     api.post(
         '/image',
-        img,
+        data,
         {
             headers: {
                 'Content-Type': 'multipart/form-data'

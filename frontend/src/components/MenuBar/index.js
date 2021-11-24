@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { Navbar, Container, Nav, NavDropdown, Form } from 'react-bootstrap'
-// import { useForm } from "react-hook-form"
 import { imageUpload } from '../../services/imageUpload'
 
 export function MenuBar() {
