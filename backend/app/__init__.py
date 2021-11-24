@@ -1,10 +1,19 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 # from image_processor import input
 
 import cv2 as cv
 import numpy as np
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.get("/")
 def root():
