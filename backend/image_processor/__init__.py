@@ -9,7 +9,7 @@ DEFAULT_IMGPATH = os.path.join(os.getcwd(), "imgs")
 print(os.getcwd())
 print(DEFAULT_IMGPATH)
 
-def main(folder_path):
+def run(folder_path):
     # ufc_img = os.path.join(DEFAULT_IMGPATH, 'ufc.jpg')
 
     if not os.path.isfile(folder_path):
@@ -34,4 +34,4 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if args.input:
-        main(args.input)
+        run(args.input)

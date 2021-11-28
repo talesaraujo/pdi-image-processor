@@ -1,6 +1,4 @@
-import os
 import numpy as np
-import cv2 as cv
 
 def normalize(img: np.ndarray) -> np.ndarray:
     return img / 255.0
