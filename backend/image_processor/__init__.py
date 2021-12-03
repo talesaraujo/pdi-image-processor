@@ -4,8 +4,10 @@ import numpy as np
 import cv2 as cv    
 
 import imgio
-from core import intensity, filtering
+from core import intensity, filtering, kernels
 from typing import Any
+# from core.filtering import FILTER_IDENTITY
+
 
 
 DEFAULT_IMGPATH = os.path.join(os.getcwd(), "imgs")
@@ -70,22 +72,20 @@ def run_debug_mode():
            [7, 6, 5, 5, 6, 7]]
     )
 
-    my_filter = np.asarray(
-        dtype=np.int8,
-        a=[[ 0, -1,  0],
-           [-1,  5, -1],
-           [ 0, -1,  0]]
-    )
-
-    # ufc_image = cv.imread('imgs/ufc.jpg', cv.IMREAD_GRAYSCALE)
+    ufc_image = cv.imread('imgs/ufc.jpg', cv.IMREAD_GRAYSCALE)
+    ufc_image = intensity.normalize(ufc_image)
     
-    # print(my_image)
-    # print("")
-    print(my_image)
-    print("")
-    print(filtering.convolve2D(img=my_image, filter=my_filter))
 
-    # imgio.display_image(my_image)
+    my_filter = kernels.GAUSSIAN_BLUR
+
+    convolved_image = filtering.convolve2D(
+        img=ufc_image, filter=my_filter)
+
+    imgio.display_image(ufc_image)
+    imgio.display_image(convolved_image)
+
+    assert ufc_image.shape == convolved_image.shape, "Convolved image does not match the size of original image!!"
+
 
 
 if __name__ == '__main__':

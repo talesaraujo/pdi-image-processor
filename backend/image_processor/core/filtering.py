@@ -21,17 +21,27 @@ def convolve2D(img: np.ndarray, filter: np.ndarray=None, padding: int=1, strides
 
     output = np.zeros((outputsize_x, outputsize_y))
 
-    print(f"{output}\n")
-
-    # Applying equal padding to both side
+    # Applying equal padding to both sides
     if padding != 0:
         img_padded = np.zeros((imgsize_x + (2*padding), imgsize_y + (2*padding)))
         img_padded[padding:-1*padding, padding:-1*padding] = img
     else:
         img_padded = img
 
-    # Convolution step
-    # for j in range(imgsize_y):
-    #     if j > imgsize_y - filtersize_y:
+    # Actual convolution step    
+    for j in range(imgsize_y):
 
-    return img_padded
+        if j > imgsize_y - filtersize_y:
+            break
+
+        if j % strides == 0:
+            for i in range(imgsize_x):
+                if i > imgsize_x - filtersize_x:
+                    break
+                try:
+                    if i % strides == 0:
+                        output[i, j] = (filter * img_padded[i:i+filtersize_x, j:j+filtersize_y]).sum()
+                except:
+                    break
+
+    return output
