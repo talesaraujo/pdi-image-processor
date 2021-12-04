@@ -7,9 +7,12 @@
 import numpy as np
 
 
-def convolve2D(img: np.ndarray, filter: np.ndarray=None, padding: int=1, strides: int=1) -> np.ndarray:
+def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:
     # Apply cross-relation
     filter = np.flipud(np.fliplr(filter))
+
+    # Set dynamic padding
+    padding = int(filter.shape[0]/2)
 
     # Get shapes
     imgsize_x, imgsize_y = img.shape[0], img.shape[1]

@@ -76,7 +76,7 @@ def run_debug_mode():
     ufc_image = intensity.normalize(ufc_image)
     
 
-    my_filter = kernels.GAUSSIAN_BLUR
+    my_filter = kernels.GAUSSIAN_BLUR_3x3
 
     convolved_image = filtering.convolve2D(
         img=ufc_image, filter=my_filter)
