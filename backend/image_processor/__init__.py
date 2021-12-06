@@ -59,9 +59,12 @@ def run_debug_mode():
     # image_context.apply_transform(intensity.normalize)
     my_image = image_context.image
 
+    my_hist = sampling.histogram_normalized(my_image,
+        plot=True)
 
-    my_hist = sampling.histogram(my_image, plot=True)
-    print(my_hist)
+    # for value in my_hist:
+    #     print(f"{value:.5f}")
+
 
 
 if __name__ == '__main__':
