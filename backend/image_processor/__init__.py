@@ -9,7 +9,6 @@ from numpy.lib.histograms import histogram
 import imgio
 from core import intensity, filtering, kernels, sampling
 from typing import Any
-# from core.filtering import FILTER_IDENTITY
 
 DEFAULT_IMGPATH = os.path.join(os.getcwd(), "imgs")
 
@@ -44,26 +43,19 @@ class ImageContext:
 
 def run_debug_mode():
 
-    # my_image = np.asarray(
-    #     dtype=np.uint8,
-    #     a=[[7, 6, 5, 5, 6, 7],
-    #        [6, 4, 3, 3, 4, 6],
-    #        [5, 3, 2, 2, 3, 5],
-    #        [5, 3, 2, 2, 3, 5],
-    #        [6, 4, 3, 3, 4, 6],
-    #        [7, 6, 5, 5, 6, 7]]
-    # )
-
-    image_context = ImageContext().load_image('imgs/house.png')
+    image_context = ImageContext().load_image('imgs/astronaut.png')
     image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
     my_image = image_context.image
 
     imgio.display_image(my_image)
-    sampling.histogram_normalized(my_image, plot=True)
-    eq_my_image = sampling.equalize_histogram(my_image)
-    sampling.histogram_normalized(eq_my_image, plot=True)
-    imgio.display_image(eq_my_image)
+    my_image_hist = sampling.histogram(img=my_image)
+    imgio.plot_histogram_prob(my_image_hist, my_image)
+
+    my_image_equalized = sampling.equalize_histogram(my_image)
+    imgio.display_image(my_image_equalized)
+    my_image_equalized_hist = sampling.histogram(img=my_image_equalized)
+    imgio.plot_histogram_prob(my_image_equalized_hist, my_image_equalized)
 
 
 if __name__ == '__main__':
