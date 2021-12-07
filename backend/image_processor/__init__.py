@@ -54,17 +54,16 @@ def run_debug_mode():
     #        [7, 6, 5, 5, 6, 7]]
     # )
 
-    image_context = ImageContext().load_image('imgs/ufc.jpg')
+    image_context = ImageContext().load_image('imgs/house.png')
     image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
     my_image = image_context.image
 
-    my_hist = sampling.histogram_normalized(my_image,
-        plot=True)
-
-    # for value in my_hist:
-    #     print(f"{value:.5f}")
-
+    imgio.display_image(my_image)
+    sampling.histogram_normalized(my_image, plot=True)
+    eq_my_image = sampling.equalize_histogram(my_image)
+    sampling.histogram_normalized(eq_my_image, plot=True)
+    imgio.display_image(eq_my_image)
 
 
 if __name__ == '__main__':

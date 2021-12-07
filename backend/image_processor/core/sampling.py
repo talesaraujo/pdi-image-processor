@@ -30,12 +30,11 @@ def histogram_normalized(img: np.ndarray, L: int=256, plot: bool=False) -> np.nd
     for element in img.flatten():
         hist[element] += 1
 
-    hist = hist / (img.shape[0] * img.shape[1])
-    cumulative_hist = np.array(hist, copy=True)
+    normalized_hist = hist / (img.shape[0] * img.shape[1])
+    cumulative_prob = cumulative_probability(hist)
 
-    for i in range(len(cumulative_hist)):
-        if i != (len(cumulative_hist)-1):
-            cumulative_hist[i+1] = cumulative_hist[i] + cumulative_hist[i+1]
+    # for value in cumulative_prob:
+    #     print(f"{value:.5f}")
 
     if plot:
         plt.figure(figsize=(18,5))
@@ -46,14 +45,46 @@ def histogram_normalized(img: np.ndarray, L: int=256, plot: bool=False) -> np.nd
             height=hist,
             color='gray',
         )
-        ax1.set_title('Histogram')
+        ax1.set_title('Probabilistic Histogram')
         ax2 = plt.subplot(122)
         ax2.plot(
             grayscale_levels,
-            cumulative_hist,
+            cumulative_prob,
             color='blue',
         )
-        ax2.set_title('Cumulative Histogram')
+        ax2.set_title('Cumulative Probability')
         plt.show()
 
-    return hist
+    return normalized_hist
+
+
+def cumulative_probability(normalized_hist: np.ndarray) -> np.ndarray:
+    cumulative_prob = np.array(normalized_hist, copy=True)
+
+    for i in range(len(cumulative_prob)):
+        if i != (len(cumulative_prob) - 1):
+            cumulative_prob[i+1] = cumulative_prob[i] + cumulative_prob[i+1]
+
+    return cumulative_prob
+
+
+def remap_shade_values(cumulative_prob: np.ndarray, L: int=256) -> None:
+    new_intensity_levels = np.zeros(L, np.int64)
+
+    for i in range(len(cumulative_prob)):
+        new_intensity_levels[i] = np.ceil(cumulative_prob[i] * (L - 1))
+
+    return new_intensity_levels
+
+
+def equalize_histogram(img: np.ndarray) -> np.ndarray:
+    normalized_hist = histogram_normalized(img=img, plot=False)
+    cumulative_prob = cumulative_probability(normalized_hist)
+
+    remapped_values = remap_shade_values(cumulative_prob)
+
+    for row in range(img.shape[0]):
+        for col in range(img.shape[1]):
+            img[row, col] = remapped_values[img[row,col]]
+    
+    return img
