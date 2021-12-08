@@ -1,5 +1,5 @@
 import os, sys
-import argparse
+# import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,7 +16,7 @@ class ImageContext:
 
     def __init__(self, image: Any=None) -> None:
         self.image = image
-        self.prev_state = None
+        self.prev_state = image
 
     @classmethod
     def load_image(cls, img_path) -> None:
@@ -50,15 +50,15 @@ class ImageContext:
 
 if __name__ == '__main__':
 
-    image_context = ImageContext().load_image('imgs/ufc.jpg')
+    image_context = ImageContext().load_image('imgs/ufc2.jpg')
     image_context.to_grayscale()
-    image_context.apply_transform(intensity.normalize)
-    my_image = image_context.image
+    # image_context.apply_transform(intensity.normalize)
+    img = image_context.image
 
     # imgio.display_image(my_image)
     # print(my_image)
 
-    my_image_t = filtering.convolve2D(my_image, kernels.LAPLACIAN)
+    # my_image_t = filtering.convolve2D(image_context.image, kernels.LAPLACIAN)
 
     # imgio.display_image(my_image_transformed)
 
