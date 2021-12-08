@@ -6,10 +6,17 @@ from core import sampling
 
 
 def display_image(img: np.ndarray, label: str="Image") -> None:
-    # img = cv.resize(img, (3, 10))
+    cv.namedWindow("Image Display", cv.WINDOW_KEEPRATIO)
     cv.imshow(label, img)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+
+    wait_time = 1000
+
+    while cv.getWindowProperty(label, cv.WND_PROP_VISIBLE) >= 1:
+        keyCode = cv.waitKey(wait_time)
+
+        if (keyCode & 0xFF) == ord("q"):
+            cv.destroyAllWindows()
+            break
 
 
 def plot_histogram(histogram: np.ndarray) -> None:
