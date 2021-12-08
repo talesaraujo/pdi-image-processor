@@ -61,3 +61,15 @@ WEIGHTED_AVERAGE_SMOOTHED = np.asarray(a=((np.asanyarray(dtype=np.int8,
        [2, 4, 2],
        [1, 2, 1]]
 ))/16))
+
+LAPLACIAN = np.asarray(dtype=np.int8,
+    a=[[ 0, -1,  0],
+       [-1,  4, -1],
+       [ 0, -1,  0]]
+)
+
+DIAGONAL_LAPLACIAN = np.asarray(dtype=np.int8,
+    a=[[-1, -1, -1],
+       [-1,  8, -1],
+       [-1, -1, -1]]
+)

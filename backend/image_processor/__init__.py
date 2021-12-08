@@ -36,27 +36,31 @@ class ImageContext:
         self.image = self.prev_state
     
     def apply_transform(self, transform_func) -> np.ndarray:
+        """TODO: Refactor in order to support function inner arguments"""
         self.prev_state = self.image
         self.image = transform_func(self.image)
         return self.image
-
-
-def run_debug_mode():
-
-    image_context = ImageContext().load_image('imgs/astronaut.png')
-    image_context.to_grayscale()
-    # image_context.apply_transform(intensity.normalize)
-    my_image = image_context.image
-
-    imgio.display_image(my_image)
-    my_image_hist = sampling.histogram(img=my_image)
-    imgio.plot_histogram_prob(my_image_hist, my_image)
-
-    my_image_equalized = sampling.equalize_histogram(my_image)
-    imgio.display_image(my_image_equalized)
-    my_image_equalized_hist = sampling.histogram(img=my_image_equalized)
-    imgio.plot_histogram_prob(my_image_equalized_hist, my_image_equalized)
+    
+    def apply_rescaling(self) -> None:
+        """TODO: Check for the possibility of having an image already within 
+        the desired range."""
+        self.image += np.abs(np.min(self.image))
+        self.image /= np.max(self.image) 
 
 
 if __name__ == '__main__':
-    run_debug_mode()
+
+    image_context = ImageContext().load_image('imgs/ufc.jpg')
+    image_context.to_grayscale()
+    image_context.apply_transform(intensity.normalize)
+    my_image = image_context.image
+
+    # imgio.display_image(my_image)
+    # print(my_image)
+
+    my_image_t = filtering.convolve2D(my_image, kernels.LAPLACIAN)
+
+    # imgio.display_image(my_image_transformed)
+
+    # scalar-sum the lowest value (absolute) out of the matrix 
+    # scalar-divide the matrix by the biggest value out of the matrix
