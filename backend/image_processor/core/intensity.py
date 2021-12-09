@@ -23,8 +23,12 @@ def rescale(img: np.ndarray) -> np.ndarray:
 
 
 def interpolate_points(pa: tuple, pb: tuple) -> None:
+    """Returns the A and b coefficients that represent a linear function."""
     if len(pa) != len(pb) != 2:
         raise ValueError("Point tuples must have length of 2.")
+    
+    if pa[0] == pb[0]:
+        raise ValueError("The two provided points do not form a function.")
 
     for i in range(2):
         if not np.all([pa[i] >= 0, pb[i] >= 0]):
@@ -32,11 +36,9 @@ def interpolate_points(pa: tuple, pb: tuple) -> None:
 
         if not np.all([pa[i] < 256, pb[i] < 256]):
             raise ValueError("Axes are not allowed to hold values greater than 255.")
-        
-        if not pa[i] < pb[i]:
-            raise ValueError(f"First point on axis-{i} is supposed to be lower than second one.")
-
-    # TODO: Perform actual interpolation
     
-    # domain = np.arange(0, 256)
-    # print(domain)
+
+    A = (pa[1] / (pa[0] - pb[0])) + (pb[1] / (pb[0] - pa[0]))
+    b = ((-pa[1] * pb[0]) / (pa[0] - pb[0])) + ((-pb[1]*pa[0]) / ( pb[0] - pa[0]))
+
+    return A, b

@@ -4,6 +4,8 @@ import cv2 as cv
 
 from core import sampling
 
+GRAYSCALE_DOMAIN = (0, 255)
+
 
 def display_image(img: np.ndarray, label: str="Image") -> None:
     cv.namedWindow("Image Display", cv.WINDOW_KEEPRATIO)
@@ -55,4 +57,20 @@ def plot_histogram_prob(histogram: np.ndarray, img: np.ndarray) -> None:
         color='black',
     )
     ax2.set_title('Cumulative Probability')
+    plt.show()
+
+
+def plot_linear_function(coeficients: tuple, p1: tuple, p2: tuple) -> None:
+    A, b = coeficients
+
+    x = np.arange(*GRAYSCALE_DOMAIN)
+    y = A*x + b
+
+    plt.figure(figsize=(10,5))
+    plt.plot(x, y, color='gray')
+    plt.plot(p1[0], p1[1], 'bo')
+    plt.plot(p2[0], p2[1], 'go')
+    plt.xlim(GRAYSCALE_DOMAIN)
+    plt.ylim(GRAYSCALE_DOMAIN)
+    plt.grid()
     plt.show()
