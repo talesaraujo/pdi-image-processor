@@ -16,7 +16,7 @@ class ImageContext:
 
     def __init__(self, image: Any=None) -> None:
         self.image = image
-        self.prev_state = image
+        self.prev_state = np.array(self.image, copy=True)
 
     @classmethod
     def load_image(cls, img_path) -> None:
@@ -50,7 +50,7 @@ class ImageContext:
 
 if __name__ == '__main__':
 
-    image_context = ImageContext().load_image('imgs/ufc2.jpg')
+    image_context = ImageContext().load_image('imgs/ufc.jpg')
     image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
     img = image_context.image
