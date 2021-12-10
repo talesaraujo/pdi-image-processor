@@ -50,17 +50,13 @@ class ImageContext:
 
 if __name__ == '__main__':
 
-    image_context = ImageContext().load_image('imgs/ufc.jpg')
-    image_context.to_grayscale()
+    # image_context = ImageContext().load_image('imgs/ufc.jpg')
+    # image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
-    img = image_context.image
+    # img = image_context.image
+    img = np.arange(0, 255, 20, dtype=np.uint8)
+    # img = img / 255.0
 
-    # imgio.display_image(my_image)
-    # print(my_image)
+    imgio.display_image(img)
 
-    # my_image_t = filtering.convolve2D(image_context.image, kernels.LAPLACIAN)
 
-    # imgio.display_image(my_image_transformed)
-
-    # scalar-sum the lowest value (absolute) out of the matrix 
-    # scalar-divide the matrix by the biggest value out of the matrix

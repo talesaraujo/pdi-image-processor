@@ -1,5 +1,5 @@
 import numpy as np
-from image_processor import imgio
+import imgio
 
 GRAYSCALE_DOMAIN = (0, 256)
 

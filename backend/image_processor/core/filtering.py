@@ -5,6 +5,7 @@
 # Average filtering 
 
 import numpy as np
+from typing import Any
 from core import kernels, intensity
 
 
@@ -62,3 +63,7 @@ def high_boost(img: np.ndarray) -> np.ndarray:
     img_p = img + img_b
 
     return img_p
+
+
+def fft(img: np.ndarray) -> Any:
+    return None
