@@ -54,9 +54,9 @@ if __name__ == '__main__':
     # image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
     # img = image_context.image
-    img = np.arange(0, 255, 20, dtype=np.uint8)
+    img = np.array([0, 255, 19, 16, 22, 49, 43, 65], dtype=np.uint8)
     # img = img / 255.0
 
-    imgio.display_image(img)
+    print(img)
 
 

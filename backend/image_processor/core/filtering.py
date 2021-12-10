@@ -65,5 +65,29 @@ def high_boost(img: np.ndarray) -> np.ndarray:
     return img_p
 
 
-def fft(img: np.ndarray) -> Any:
-    return None
+def dft(x: np.ndarray) -> np.ndarray:
+    """Computes the Discrete Fourier Transform by using the naive approach
+    (a direct formula application, which resolves at O(n^2) time)
+    
+    Parameters
+    ----------
+    x : np.ndarray
+        The 1-dimentional array from which the transform will be calculated from.
+
+    Returns
+    -------
+    X: np.ndarray
+        The value of the frequencies computed for the x array.
+    """
+    N = len(x)
+    X = []
+
+    # Iterate k through 0..N-1
+    for k in range(N):
+        sum_ = complex(0)
+        # Iterate n through 0..N-1
+        for n in range(N):
+            sum_ += x[n] * np.exp(complex(-2j * k * n * np.pi) / N)
+        X.append(sum_)
+
+    return np.asarray(X)
