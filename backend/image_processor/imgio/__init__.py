@@ -7,7 +7,7 @@ from core import sampling
 GRAYSCALE_DOMAIN = (0, 256)
 
 
-def display_image(img: np.ndarray, label: str="Image") -> None:
+def display(img: np.ndarray, label: str="Image") -> None:
     """Literally displays the image."""
     cv.namedWindow("Image Display", cv.WINDOW_KEEPRATIO)
     cv.imshow(label, img)

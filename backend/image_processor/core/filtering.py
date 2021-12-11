@@ -91,3 +91,30 @@ def dft(x: np.ndarray) -> np.ndarray:
         X.append(sum_)
 
     return np.asarray(X)
+
+
+def dft2(f: np.ndarray) -> np.ndarray:
+    """Computes the 2-Dimentional Discrete Fourier Transform by using the naive
+    approach (a direct formula application, which resolves at O(n^2) time)
+    
+    Parameters
+    ----------
+    f : np.ndarray
+        The 2-dimentional array from which the transform will be calculated from.
+
+    Returns
+    -------
+    F: np.ndarray
+        The value of the frequencies computed for the f array.
+    """
+    M, N = f.shape
+
+    F2d = np.zeros((M,N), complex)
+
+    for m in range(M):
+        for n in range(N):
+            for x in range(M):
+                for y in range(N):
+                    F2d[m][n] += f[x][y] * np.exp(-2j * np.pi * (m*x/M+n*y/N))
+
+    return F2d
