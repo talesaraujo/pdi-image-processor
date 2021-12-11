@@ -50,14 +50,26 @@ class ImageContext:
 
 if __name__ == '__main__':
 
-    # image_context = ImageContext().load_image('imgs/ufc.jpg')
-    # image_context.to_grayscale()
+    image_context = ImageContext().load_image('imgs/lena_32.png')
+    image_context.to_grayscale()
     # image_context.apply_transform(intensity.normalize)
-    # img = image_context.image
-    img = np.random.randint(0, 255, size=64, dtype=np.uint8)
-    img = img.reshape((8, 8))
-    # img = img / 255.0
+    img = image_context.image
 
     print(img)
 
+    # img = np.random.randint(0, 255, size=64, dtype=np.uint8)
+    # img = img.reshape((8, 8))
+    # img = img / 255.0
+    F_np = np.fft.fft2(img)
+    f_np = np.fft.ifft2(F_np)
+    
+    print(np.real(f_np))
+
+    F_t = filtering.dft2(img)
+    f_t = filtering.idft2(F_t)
+
+    print(np.real(f_t))
+
+    print(np.isclose(F_np, F_t))
+    print(np.isclose(f_np, f_t))
 

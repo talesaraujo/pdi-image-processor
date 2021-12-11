@@ -7,6 +7,7 @@
 import numpy as np
 from typing import Any
 from core import kernels, intensity
+from time import time
 
 
 def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:
@@ -115,6 +116,37 @@ def dft2(f: np.ndarray) -> np.ndarray:
         for n in range(N):
             for x in range(M):
                 for y in range(N):
-                    F2d[m][n] += f[x][y] * np.exp(-2j * np.pi * (m*x/M+n*y/N))
+                    F2d[m, n] += f[x, y] * np.exp(-2j * np.pi * ((m*x / M) + (n*y / N)))
 
     return F2d
+
+
+def idft2(F: np.ndarray) -> np.ndarray:
+    """Computes the 2-Dimentional Inverse Discrete Fourier Transform by using 
+    the naive approach (a direct formula application, which resolves at O(n^2) time)
+    
+    Parameters
+    ----------
+    F : np.ndarray
+        The 2-dimentional array from which the inverse transform will be 
+        calculated from.
+
+    Returns
+    -------
+    F: np.ndarray
+        The value of the frequencies computed for the f array.
+    """
+    M, N = F.shape
+
+    iF2d = np.zeros((M,N), complex)
+
+    for x in range(M):
+        for y in range(N):
+
+            for m in range(M):
+                for n in range(N):
+                    iF2d[m, n] += F[m,n] * np.exp(2j * np.pi * ((m*x / M) + (n*y / N)))
+
+            iF2d[x,y] = (1 / (M * N)) * iF2d[x,y]
+
+    return iF2d
