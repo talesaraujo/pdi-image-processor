@@ -110,15 +110,15 @@ def dft2(f: np.ndarray) -> np.ndarray:
     """
     M, N = f.shape
 
-    F2d = np.zeros((M,N), complex)
+    F = np.zeros((M,N), complex)
 
-    for m in range(M):
-        for n in range(N):
+    for u in range(M):
+        for v in range(N):
             for x in range(M):
                 for y in range(N):
-                    F2d[m, n] += f[x, y] * np.exp(-2j * np.pi * ((m*x / M) + (n*y / N)))
+                    F[u, v] += f[x, y] * np.exp(-2j * np.pi * ((u*x / M) + (v*y / N)))
 
-    return F2d
+    return F
 
 
 def idft2(F: np.ndarray) -> np.ndarray:
@@ -138,15 +138,12 @@ def idft2(F: np.ndarray) -> np.ndarray:
     """
     M, N = F.shape
 
-    iF2d = np.zeros((M,N), complex)
+    f = np.zeros((M,N), complex)
 
     for x in range(M):
         for y in range(N):
+            for u in range(M):
+                for v in range(N):
+                    f[x, y] += (1/(M * N)) * F[u, v] * np.exp(2j * np.pi * (u*x / M) + (v*y / N))
 
-            for m in range(M):
-                for n in range(N):
-                    iF2d[m, n] += F[m,n] * np.exp(2j * np.pi * ((m*x / M) + (n*y / N)))
-
-            iF2d[x,y] = (1 / (M * N)) * iF2d[x,y]
-
-    return iF2d
+    return f
