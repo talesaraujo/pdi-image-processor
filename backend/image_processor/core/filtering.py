@@ -144,6 +144,6 @@ def idft2(F: np.ndarray) -> np.ndarray:
         for y in range(N):
             for u in range(M):
                 for v in range(N):
-                    f[x, y] += (1/(M * N)) * F[u, v] * np.exp(2j * np.pi * (u*x / M) + (v*y / N))
+                    f[x, y] += (1 / (M * N)) * F[u, v] * np.exp(2j * np.pi * ((u*x / M) + (v*y / N)))
 
     return f
