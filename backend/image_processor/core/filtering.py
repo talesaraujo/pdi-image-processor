@@ -7,7 +7,6 @@
 import numpy as np
 from typing import Any
 from core import kernels, intensity
-from time import time
 
 
 def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:
