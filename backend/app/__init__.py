@@ -1,6 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-# from image_processor import input
+from numpy.lib.npyio import load
+
+from image_processor import ImageContext
 
 import cv2 as cv
 import numpy as np
@@ -23,13 +25,17 @@ def root():
 @app.post("/image", status_code=202)
 def send_image(image_file: UploadFile=File(...)):
     
-    with image_file.file as imgfile:
-        io_buf = imgfile._file
-        decoded_img = cv.imdecode(np.frombuffer(io_buf.getbuffer(), np.uint8), -1)
+    # with image_file.file as imgfile:
+    #     io_buf = imgfile._file
+    #     decoded_img = cv.imdecode(np.frombuffer(io_buf.getbuffer(), np.uint8), -1)
 
-    img_gray = cv.cvtColor(decoded_img, cv.COLOR_BGR2GRAY)
+    context = ImageContext.load_image_from_buffer(image_file)
+    context.to_grayscale()
+    
 
-    print(img_gray)
+    # img_gray = cv.cvtColor(decoded_img, cv.COLOR_BGR2GRAY)
+
+    print(context.image)
 
     # cv.imwrite('image-gray-transformed.jpg', img_gray)
 
