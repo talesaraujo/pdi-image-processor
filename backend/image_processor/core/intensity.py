@@ -36,6 +36,11 @@ def rescale(img: np.ndarray) -> np.ndarray:
     return img
 
 
+def denormalize(img: np.ndarray) -> np.ndarray:
+    """De-normalizes the image, at the range of [0..255]"""
+    return np.uint8(img * 255)
+
+
 def interpolate_points(pa: tuple, pb: tuple) -> None:
     """Returns the A and b coefficients that represent a linear function."""
     if len(pa) != len(pb) != 2:
