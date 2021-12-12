@@ -3,7 +3,7 @@ import cv2 as cv
 
 sg.ChangeLookAndFeel('Dark')      
 sg.set_options(
-    font=("Roboto", 12),
+    # font=("Roboto", 12),
     element_padding=(0, 0)
 )
 
