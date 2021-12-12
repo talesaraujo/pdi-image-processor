@@ -29,7 +29,6 @@ class ImageContext:
 
 
     def to_grayscale(self) -> None:
-        self.prev_state = self.image
         self.image = cv.cvtColor(self.image, cv.COLOR_BGR2GRAY)
 
 
@@ -39,10 +38,10 @@ class ImageContext:
         self.image = self.prev_state
 
 
-    def apply_transform(self, transform_func) -> np.ndarray:
+    def apply_transform(self, transform_func, *args) -> np.ndarray:
         """TODO: Refactor in order to support function inner arguments"""
         self.prev_state = self.image
-        self.image = transform_func(self.image)
+        self.image = transform_func(self.image, *args)
         return self.image
 
 

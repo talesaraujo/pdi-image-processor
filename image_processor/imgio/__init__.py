@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-from core import sampling
+from image_processor.core import sampling
 
 GRAYSCALE_DOMAIN = (0, 256)
 

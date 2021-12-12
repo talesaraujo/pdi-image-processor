@@ -1,5 +1,5 @@
 import numpy as np
-import imgio
+from image_processor import imgio
 
 GRAYSCALE_DOMAIN = (0, 256)
 
@@ -8,7 +8,7 @@ def normalize(img: np.ndarray) -> np.ndarray:
     return img / 255.0
 
 
-def set_brightness(img: np.ndarray, factor: int) -> np.ndarray:
+def set_brightness(img: np.ndarray, factor: np.float) -> np.ndarray:
     """Controls the image brightness through a certain numeric factor."""
     return factor * img
 
