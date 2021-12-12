@@ -1,11 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from numpy.lib.npyio import load
-
 from image_processor import ImageContext
-
-import cv2 as cv
-import numpy as np
 
 app = FastAPI()
 
