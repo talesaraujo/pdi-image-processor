@@ -24,20 +24,11 @@ def root():
 
 @app.post("/image", status_code=202)
 def send_image(image_file: UploadFile=File(...)):
-    
-    # with image_file.file as imgfile:
-    #     io_buf = imgfile._file
-    #     decoded_img = cv.imdecode(np.frombuffer(io_buf.getbuffer(), np.uint8), -1)
 
     context = ImageContext.load_image_from_buffer(image_file)
     context.to_grayscale()
     
-
-    # img_gray = cv.cvtColor(decoded_img, cv.COLOR_BGR2GRAY)
-
     print(context.image)
-
-    # cv.imwrite('image-gray-transformed.jpg', img_gray)
 
     return {
         "filename": image_file.filename
