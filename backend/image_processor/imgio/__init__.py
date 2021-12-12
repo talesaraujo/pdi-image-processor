@@ -9,17 +9,11 @@ GRAYSCALE_DOMAIN = (0, 256)
 
 def display(img: np.ndarray, label: str="Image") -> None:
     """Literally displays the image."""
-    cv.namedWindow("Image Display", cv.WINDOW_KEEPRATIO)
+    cv.namedWindow(label, cv.WINDOW_KEEPRATIO)
     cv.imshow(label, img)
 
-    wait_time = 1000
-
     while cv.getWindowProperty(label, cv.WND_PROP_VISIBLE) >= 1:
-        keyCode = cv.waitKey(wait_time)
-
-        if (keyCode & 0xFF) == ord("q"):
-            cv.destroyAllWindows()
-            break
+        cv.waitKey(50)
 
 
 def plot_histogram(histogram: np.ndarray) -> None:
