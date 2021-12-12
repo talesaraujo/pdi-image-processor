@@ -28,7 +28,7 @@ export function MenuBar() {
 
                 <NavDropdown title="File" id="basic-dropdown-1">
                     <NavDropdown.Item href="#action/3.1">
-                        <Form.Control type="file" size="sm" onChange={(e) => setImage(e.target.files[0])} />
+                        <Form.Control type="file" size="sm" label="Abrir" onChange={(e) => setImage(e.target.files[0])} />
                     </NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.2">Save</NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.3">Save As</NavDropdown.Item>

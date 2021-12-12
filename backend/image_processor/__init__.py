@@ -15,12 +15,14 @@ class ImageContext:
             raise FileNotFoundError("No such file.")
         return cls(cv.imread(img_path, cv.IMREAD_COLOR))
 
-    @classmethod
-    def load_image_from_buffer(cls, img_file):
+    def set_from_buffer(self, img_file):
         with img_file.file as imgfile:
             io_buf = imgfile._file
             decoded_img = cv.imdecode(np.frombuffer(io_buf.getbuffer(), np.uint8), -1)
-        return cls(decoded_img)
+        self.image = decoded_img
+    
+    def as_buffer(self):
+        return cv.imencode(".jpg", self.image)
 
     def to_grayscale(self) -> None:
         self.prev_state = self.image

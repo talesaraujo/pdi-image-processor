@@ -14,6 +14,16 @@ export function imageUpload(img) {
             }
         }
     )
-    .then((response) => console.log(response))
+    .then((response) => {
+        if (response.status == 202) {
+            api.get(
+                '/image'
+            )
+            .then((response) => {
+                console.log(response)
+            })
+        }
+    })
     .catch((error) => console.log(error))
+
 }
