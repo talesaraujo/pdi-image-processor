@@ -1,32 +1,38 @@
-import PySimpleGUI as sg      
+import os
+import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import cv2 as cv
+import PySimpleGUI as sg
+from image_processor import ImageContext
 
-sg.ChangeLookAndFeel('Dark')      
+
+ALLOWED_EXTENSIONS = [
+    ".bmp",
+    "jpg",
+    "bmp"
+]
+
+sg.ChangeLookAndFeel('DarkGrey13')      
 sg.set_options(
-    # font=("Roboto", 12),
+    font=("Roboto", 12),
     element_padding=(0, 0)
 )
-
-# print(sg.get_opt)
-
-# sg.DEFAULT_FONT = ("Segoe UI Variable", 11)
 
 
 # ------ Menu Definition ------ #      
 menu_def = [
-    ['File',['Open', 'Save', 'Exit'  ]],      
-    ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],      
-    ['Help', 'About'], ]      
+    ['File', ['Open', 'Save', 'Exit'  ]],
+    ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
+    ['Intensity', ['Negative', 'Brightness', 'Log Transform', 'Gamma Transform']],
+    ['Help', 'About'], ]
 
 # ------ GUI Defintion ------ #      
 layout = [      
-    [sg.Menu(menu_def, font=("Inter", 10))],     
-    [sg.Output(size=(60, 20))],
-    # [sg.Image(source=None)]
+    [sg.Menu(menu_def)],
+    [sg.Image(key="-IMAGE-", size=(800, 600), background_color="gray")],  
 ]      
 
 window = sg.Window(
-    "Windows-like program",
+    "Image-Processor",
     layout,
     default_element_size=(12, 1),
     auto_size_text=False,
@@ -34,10 +40,8 @@ window = sg.Window(
     default_button_element_size=(12, 1)
 )
 
-def display_image():
-    elements = [
-        [sg.Image]
-    ]
+
+icontext = ImageContext()
 
 # ------ Loop & Process button menu choices ------ #      
 while True:      
@@ -52,9 +56,17 @@ while True:
         sg.popup('About this program', 'Version 0.1', 'PySimpleGUI rocks...')  
         
     elif event == 'Open':      
-        img_path = sg.popup_get_file('file to open', no_window=True)      
+        img_path = sg.popup_get_file('File to open', no_window=True)
         
-        img = cv.imread(img_path, cv.IMREAD_COLOR)
-        print(img)
+        icontext.load_image(img_path)
+        # # Read image with opencv
+        # img = cv.imread(img_path, cv.IMREAD_COLOR)
 
-    
+        # print(type(img))
+        # print(img)
+        # # Encode img file
+        img_bytes = cv.imencode('.png', icontext.image)[1].tobytes()
+
+        window["-IMAGE-"].update(img_bytes)
+
+
