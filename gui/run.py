@@ -1,6 +1,5 @@
 import os
-import sys
-from PySimpleGUI.PySimpleGUI import I; sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
 import cv2 as cv
 import PySimpleGUI as sg
@@ -20,7 +19,7 @@ BLANK_CANVAS = np.full((768, 1366), 217)
 
 sg.ChangeLookAndFeel('Default1')     
 sg.set_options(
-    font=("DejaVu Sans", 10),
+    font=("Segoe UI", 9),
     element_padding=(0, 0)
 )
 
@@ -30,7 +29,7 @@ menu_def = [
     [ 'File', [ 'Open', 'Save', 'Exit' ] ],
     [ 'Edit', [ 'Clear', 'Undo', 'Paste' ], ],
     [ 'Mode', [ 'RGB', 'Grayscale' ] ],
-    [ 'Intensity', [ 'Negative', 'Brightness', 'Log-Transform', 'Gamma-Correction' ] ],
+    [ 'Intensity', [ 'Negative', 'Brightness', 'Log-Transform', 'Gamma-Correction', 'Linear-Interpolation' ] ],
     [ 'Help', 'About'],
 ]
 
@@ -170,4 +169,32 @@ while True:
                     sg.popup_error("Missing values. Try again")
    
         else:
-            sg.popup_error('No loaded image to apply effect!')
+            sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == 'Linear-Interpolation':
+        if icontext.image is not None:
+            li_input_popup = inputs.get_linear_piecewise()
+            li_input_event, li_input_values = li_input_popup.read()
+            li_input_popup.close()
+
+            if li_input_event == "Apply":
+                pa_x, pa_y = li_input_values[0], li_input_values[2]
+                pb_x, pb_y = li_input_values[1], li_input_values[3]
+
+                if pa_x and pa_y and pb_x and pb_y:
+                    try:
+                        icontext.apply_transform(
+                            intensity.linear_piecewise,
+                            (int(pa_x), int(pa_y)), (int(pb_x), int(pb_y)),
+                            True
+                        )
+                        main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+                    except ValueError as v_err:
+                        sg.popup_error(v_err)
+
+                else:
+                    sg.popup_error('Values are missing. Please try again.')
+        else:
+            sg.popup_error("No loaded image to apply effect!")
+
