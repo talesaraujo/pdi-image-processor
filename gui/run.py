@@ -172,12 +172,14 @@ while True:
 
     elif event == 'Grayscale':
         if icontext.image is not None:
-            # FIXME: It does not work properly when switching mode (color to grayscale)
-            # icontext.normalize()
-            icontext.to_grayscale()
-            # icontext.denormalize()
-            img_bytes = cv.imencode('.png', icontext.image)[1].tobytes()
-            main_window["IMAGE"].update(img_bytes)
+            if icontext.image.ndim == 3:
+                # icontext.normalize()
+                icontext.to_grayscale()
+                # icontext.denormalize()
+                img_bytes = cv.imencode('.png', icontext.image)[1].tobytes()
+                main_window["IMAGE"].update(img_bytes)
+            else:
+                sg.popup_quick_message("Image is already at grayscale tone")
         else:
             sg.popup_error('No loaded image to apply effect!')
     
