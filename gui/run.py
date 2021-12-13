@@ -368,3 +368,33 @@ while True:
 
         else:
             sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == "Normal":
+        if icontext.image is not None:
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.AVERAGE_SMOOTHED
+            )
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == "Weighted":
+        if icontext.image is not None:
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.WEIGHTED_AVERAGE_SMOOTHED
+            )
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
