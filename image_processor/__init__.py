@@ -3,6 +3,7 @@ import numpy as np
 import cv2 as cv
 
 from typing import Any
+from image_processor.core import intensity
 
 
 class ImageContext:
@@ -36,11 +37,21 @@ class ImageContext:
         if self.prev_state is None:
             return None
         self.image = self.prev_state
+    
+
+    def normalize(self) -> None:
+        self.image = intensity.normalize(self.image)
+        self.prev_state = intensity.normalize(self.prev_state)
+
+
+    def denormalize(self) -> None:
+        self.image = intensity.denormalize(self.image)
+        self.prev_state = intensity.denormalize(self.prev_state)
 
 
     def apply_transform(self, transform_func, *args) -> np.ndarray:
         """TODO: Refactor in order to support function inner arguments"""
-        self.prev_state = self.image
+        self.prev_state = np.array(self.image, copy=True)
         self.image = transform_func(self.image, *args)
         return self.image
 
