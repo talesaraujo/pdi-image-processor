@@ -2,12 +2,12 @@ import PySimpleGUI as sg
 
 def new_save_input():
     return sg.Window(
-        title='Get filename example',
+        title='Export file as',
         layout=[
-            [sg.Text('Filename')],
-            [sg.Input(), sg.FileSaveAs()], 
-            [sg.OK(), sg.Cancel()],
-        ]
+            [sg.Text('Filename:'), sg.Input()], 
+            [sg.OK(key='SAVE-OK'), sg.Cancel(key='SAVE-CANCEL')],
+        ],
+        element_justification='c'
     )
 
 

@@ -1,5 +1,6 @@
 import os
-import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import sys
+from tkinter.constants import ALL; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
 import cv2 as cv
 import PySimpleGUI as sg
@@ -11,8 +12,8 @@ from gui import inputs
 
 ALLOWED_EXTENSIONS = [
     ".bmp",
-    "jpg",
-    "bmp"
+    ".jpg",
+    ".png"
 ]
 
 BLANK_CANVAS = np.full((768, 1366), 240)
@@ -86,13 +87,24 @@ while True:
             sv_input_event, sv_input_values = sv_input_popup.read()
             sv_input_popup.close()
 
-            # li_input_popup = inputs.get_linear_piecewise()
-            # li_input_event, li_input_values = li_input_popup.read()
-            # li_input_popup.close()
+            filename = sv_input_values[0]
+            name, extension = os.path.splitext(filename)
+            
+            if sv_input_event == 'SAVE-OK' and extension in ALLOWED_EXTENSIONS:
+                img_path = sg.popup_get_folder('Select location', no_window=True)
+                save_path = os.path.join(os.path.abspath(img_path), filename)
+                status = cv.imwrite(save_path, icontext.image)
+                # print(status)
+
+            elif sv_input_event == 'SAVE-CANCEL':
+                pass
+            
+            else:
+                sg.popup_error(f"This image processor only supports the following extensions: {ALLOWED_EXTENSIONS}")
+            
         else:
-            sg.popup_error("Cannot save any image!")
-        
-    
+            sg.popup_error("There's no image to save!")
+
 
     elif event == 'Clear':
         icontext.image = None
@@ -109,8 +121,10 @@ while True:
 
     elif event == 'Grayscale':
         if icontext.image is not None:
+            # FIXME: It does not work properly when switching mode (color to grayscale)
+            # icontext.normalize()
             icontext.to_grayscale()
-
+            # icontext.denormalize()
             img_bytes = cv.imencode('.png', icontext.image)[1].tobytes()
             main_window["IMAGE"].update(img_bytes)
         else:
