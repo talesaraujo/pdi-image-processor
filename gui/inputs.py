@@ -1,5 +1,16 @@
 import PySimpleGUI as sg
 
+def new_save_input():
+    return sg.Window(
+        title='Get filename example',
+        layout=[
+            [sg.Text('Filename')],
+            [sg.Input(), sg.FileSaveAs()], 
+            [sg.OK(), sg.Cancel()],
+        ]
+    )
+
+
 def get_gamma_transform():
     return sg.Window(
         title="Set gamma correction values",

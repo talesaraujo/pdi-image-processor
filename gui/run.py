@@ -15,7 +15,7 @@ ALLOWED_EXTENSIONS = [
     "bmp"
 ]
 
-BLANK_CANVAS = np.full((768, 1366), 217)
+BLANK_CANVAS = np.full((768, 1366), 240)
 
 sg.ChangeLookAndFeel('Default1')     
 sg.set_options(
@@ -81,10 +81,17 @@ while True:
 
 
     elif event == 'Save':      
-        img_path = sg.popup_get_folder('Save file to', no_window=True)
+        if icontext.image is not None and icontext.image is not BLANK_CANVAS:
+            sv_input_popup = inputs.new_save_input()
+            sv_input_event, sv_input_values = sv_input_popup.read()
+            sv_input_popup.close()
 
-        if img_path:
-            print(img_path)
+            # li_input_popup = inputs.get_linear_piecewise()
+            # li_input_event, li_input_values = li_input_popup.read()
+            # li_input_popup.close()
+        else:
+            sg.popup_error("Cannot save any image!")
+        
     
 
     elif event == 'Clear':
