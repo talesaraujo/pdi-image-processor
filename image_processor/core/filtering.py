@@ -1,12 +1,7 @@
-# Implement thresholding (limizarização)
-
-# Implement the application of a generic filter through convolution
-
-# Average filtering 
-
+# TODO: Implement thresholding (limizarização)
 import numpy as np
 from typing import Any
-from core import kernels, intensity
+from image_processor.core import kernels, intensity
 
 
 def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:

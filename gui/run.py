@@ -5,7 +5,7 @@ import cv2 as cv
 import PySimpleGUI as sg
 
 from image_processor import ImageContext, imgio
-from image_processor.core import intensity, sampling
+from image_processor.core import intensity, sampling, filtering, kernels
 from gui import inputs
 
 
@@ -63,7 +63,11 @@ MENU_DEF = [
     [
         'Filters', [
             'Generic Convolution',
-            'Gaussian Blur',
+            'Gaussian Blur', [
+                '3x3',
+                '5x5',
+                '7x7',
+            ],
             'Average Smoothing', [
                 'Normal',
                 'Weighted'
@@ -267,7 +271,8 @@ while True:
                     sg.popup_error('Values are missing. Please try again.')
         else:
             sg.popup_error("No loaded image to apply effect!")
-    
+
+
     elif event == "Equalize Histogram":
         if icontext.image is not None:
             icontext.apply_transform(sampling.equalize_histogram)
@@ -275,4 +280,39 @@ while True:
         else:
             sg.popup_error("No loaded image to apply effect!")
     
-    # elif event == 'Gaussian Blur'
+    elif event == "3x3":
+        if icontext.image is not None:
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.GAUSSIAN_BLUR_3x3
+            )
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == "5x5":
+        if icontext.image is not None:
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.GAUSSIAN_BLUR_5x5
+            )
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == "7x7":
+        if icontext.image is not None:
+            icontext.normalize()
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.GAUSSIAN_BLUR_7x7
+            )
+            icontext.denormalize()
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")

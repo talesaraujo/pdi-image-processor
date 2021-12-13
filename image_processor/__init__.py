@@ -50,7 +50,6 @@ class ImageContext:
 
 
     def apply_transform(self, transform_func, *args) -> np.ndarray:
-        """TODO: Refactor in order to support function inner arguments"""
         try:
             self.prev_state = np.array(self.image, copy=True)
             self.image = transform_func(self.image, *args)
