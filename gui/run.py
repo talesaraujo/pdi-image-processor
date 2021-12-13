@@ -4,9 +4,9 @@ import numpy as np
 import cv2 as cv
 import PySimpleGUI as sg
 
+from image_processor import ImageContext, imgio
+from image_processor.core import intensity, sampling
 from gui import inputs
-from image_processor import ImageContext
-from image_processor.core import intensity
 
 
 ALLOWED_EXTENSIONS = [
@@ -30,6 +30,8 @@ menu_def = [
     [ 'Edit', [ 'Clear', 'Undo', 'Paste' ], ],
     [ 'Mode', [ 'RGB', 'Grayscale' ] ],
     [ 'Intensity', [ 'Negative', 'Brightness', 'Log-Transform', 'Gamma-Correction', 'Linear-Interpolation' ] ],
+    [ 'Colors', [ 'Equalize Histogram'] ],
+    [ 'Filters', ['Generic Convolution', 'Gaussian Blur', 'Average Smoothing', ['Normal', 'Weighted'] , 'Sharpening', [ 'Laplacian', 'High-Boost' ] ]  ],
     [ 'Help', 'About'],
 ]
 
@@ -197,4 +199,10 @@ while True:
                     sg.popup_error('Values are missing. Please try again.')
         else:
             sg.popup_error("No loaded image to apply effect!")
-
+    
+    elif event == "Equalize Histogram":
+        if icontext.image is not None:
+            icontext.apply_transform(sampling.equalize_histogram)
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+        else:
+            sg.popup_error("No loaded image to apply effect!")
