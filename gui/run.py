@@ -1,6 +1,5 @@
 import os
-import sys
-from tkinter.constants import ALL; sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
 import cv2 as cv
 import PySimpleGUI as sg
@@ -26,14 +25,60 @@ sg.set_options(
 
 
 # ------ Menu Definition ------ #      
-menu_def = [
-    [ 'File', [ 'Open', 'Save', 'Exit' ] ],
-    [ 'Edit', [ 'Clear', 'Undo', 'Paste' ], ],
-    [ 'Mode', [ 'RGB', 'Grayscale' ] ],
-    [ 'Intensity', [ 'Negative', 'Brightness', 'Log-Transform', 'Gamma-Correction', 'Linear-Interpolation' ] ],
-    [ 'Colors', [ 'Equalize Histogram'] ],
-    [ 'Filters', ['Generic Convolution', 'Gaussian Blur', 'Average Smoothing', ['Normal', 'Weighted'] , 'Sharpening', [ 'Laplacian', 'High-Boost' ] ]  ],
-    [ 'Help', 'About'],
+MENU_DEF = [
+    [ 
+        'File', [ 
+            'Open',
+            'Save',
+            'Exit'
+        ]
+    ],
+    [
+        'Edit', [
+            'Clear',
+            'Undo',
+            'Paste'
+        ],
+    ],
+    [
+        'Mode', [
+            'RGB',
+            'Grayscale'
+        ]
+    ],
+    [
+        'Intensity', [
+            'Negative',
+            'Brightness',
+            'Log-Transform',
+            'Gamma-Correction',
+            'Linear-Interpolation'
+        ]
+    ],
+    [
+        'Colors', [
+            'Equalize Histogram'
+        ]
+    ],
+    [
+        'Filters', [
+            'Generic Convolution',
+            'Gaussian Blur',
+            'Average Smoothing', [
+                'Normal',
+                'Weighted'
+            ],
+            'Sharpening', [
+                'Laplacian',
+                'High-Boost'
+            ]
+        ]
+    ],
+    [
+        'Help', [
+            'About'
+        ]
+    ],
 ]
 
 # ------ GUI Defintion ------ #
@@ -43,7 +88,7 @@ frame_layout = [
 ]
 
 main_layout = [      
-    [sg.Menu(menu_def)],
+    [sg.Menu(MENU_DEF)],
     [sg.Frame(title="", size=(1366, 768), layout=frame_layout, element_justification='c', vertical_alignment='center')]  
 ]      
 
@@ -53,7 +98,8 @@ main_window = sg.Window(
     default_element_size=(12, 1),
     auto_size_text=False,
     auto_size_buttons=False,
-    default_button_element_size=(12, 1)
+    default_button_element_size=(12, 1),
+    resizable=True
 )
 
 icontext = ImageContext()
@@ -228,3 +274,5 @@ while True:
             main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
         else:
             sg.popup_error("No loaded image to apply effect!")
+    
+    # elif event == 'Gaussian Blur'
