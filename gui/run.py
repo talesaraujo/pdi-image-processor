@@ -93,12 +93,13 @@ while True:
             if sv_input_event == 'SAVE-OK' and extension in ALLOWED_EXTENSIONS:
                 img_path = sg.popup_get_folder('Select location', no_window=True)
                 save_path = os.path.join(os.path.abspath(img_path), filename)
-                status = cv.imwrite(save_path, icontext.image)
-                # print(status)
+                success = cv.imwrite(save_path, icontext.image)
+                if not success:
+                    sg.popup_error("Failed to save file!")
 
             elif sv_input_event == 'SAVE-CANCEL':
                 pass
-            
+
             else:
                 sg.popup_error(f"This image processor only supports the following extensions: {ALLOWED_EXTENSIONS}")
             
