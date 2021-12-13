@@ -73,7 +73,7 @@ MENU_DEF = [
                 'Weighted'
             ],
             'Sharpening', [
-                'Laplacian',
+                'Edge Detection (Laplacian)',
                 'High-Boost'
             ]
         ]
@@ -282,10 +282,15 @@ while True:
     
     elif event == "3x3":
         if icontext.image is not None:
+            print(icontext.image.shape)
             icontext.apply_transform(
                 filtering.convolve2D,
                 kernels.GAUSSIAN_BLUR_3x3
             )
+            print(icontext.image.shape)
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+
             main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 
         else:
@@ -294,10 +299,14 @@ while True:
 
     elif event == "5x5":
         if icontext.image is not None:
+            print(icontext.image.shape)
             icontext.apply_transform(
                 filtering.convolve2D,
                 kernels.GAUSSIAN_BLUR_5x5
             )
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+            print(icontext.image.shape)
             main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 
         else:
@@ -306,13 +315,32 @@ while True:
 
     elif event == "7x7":
         if icontext.image is not None:
-            icontext.normalize()
+            print(icontext.image.shape)
             icontext.apply_transform(
                 filtering.convolve2D,
                 kernels.GAUSSIAN_BLUR_7x7
             )
-            icontext.denormalize()
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+            print(icontext.image.shape)
             main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 
         else:
             sg.popup_error("No loaded image to apply effect!")
+
+
+    elif event == "Edge Detection (Laplacian)":
+        if icontext.image is not None:
+            print(icontext.image.shape)
+            icontext.apply_transform(
+                filtering.convolve2D,
+                kernels.LAPLACIAN
+            )
+            icontext.apply_rescaling()
+            icontext.denormalize(change_prevstate=False)
+            print(icontext.image.shape)
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
+    

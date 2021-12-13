@@ -44,9 +44,10 @@ class ImageContext:
         self.prev_state = intensity.normalize(self.prev_state)
 
 
-    def denormalize(self) -> None:
+    def denormalize(self, change_prevstate: bool=True) -> None:
         self.image = intensity.denormalize(self.image)
-        self.prev_state = intensity.denormalize(self.prev_state)
+        if change_prevstate:
+            self.prev_state = intensity.denormalize(self.prev_state)
 
 
     def apply_transform(self, transform_func, *args) -> np.ndarray:
