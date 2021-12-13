@@ -344,3 +344,27 @@ while True:
         else:
             sg.popup_error("No loaded image to apply effect!")
     
+
+    elif event == "High-Boost":
+        if icontext.image is not None:
+            img_blurred = filtering.convolve2D(
+                icontext.image,
+                kernels.GAUSSIAN_BLUR_3x3
+            )
+            img_blurred = intensity.rescale(img_blurred)
+            img_blurred = intensity.denormalize(img_blurred)
+            # print(img_blurred)
+            img_edges = icontext.image - img_blurred
+            img_edges = np.float64(img_edges)
+            # print(img_edges)
+            # img_edges = intensity.rescale(img_edges)
+            # img_edges = intensity.denormalize(img_edges)
+            icontext.image = icontext.image + img_edges
+            
+            # icontext.apply_rescaling()
+            # icontext.denormalize(change_prevstate=False)
+
+            main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
