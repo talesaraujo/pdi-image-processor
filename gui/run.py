@@ -61,7 +61,7 @@ MENU_DEF = [
         ]
     ],
     [
-        'Filters', [
+        'Filtering', [
             'Generic Convolution',
             'Gaussian Blur', [
                 '3x3',
@@ -75,7 +75,10 @@ MENU_DEF = [
             'Sharpening', [
                 'Edge Detection (Laplacian)',
                 'High-Boost'
-            ]
+            ],
+            'Frequency Domain', [
+                'Fourier-Transform'
+            ],
         ]
     ],
     [
@@ -400,3 +403,14 @@ while True:
 
         else:
             sg.popup_error("No loaded image to apply effect!")
+
+
+    # elif event == "Fourier-Transform":
+    #     if icontext.image is not None:
+    #         sg.popup("Applied fourier transform")
+
+
+
+
+    #     else:
+    #         sg.popup_error("No loaded image to apply effect!")

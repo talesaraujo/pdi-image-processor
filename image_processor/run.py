@@ -1,4 +1,5 @@
 import os
+import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 # import argparse
 import numpy as np
 import imgio
@@ -10,8 +11,19 @@ from typing import Any
 
 if __name__ == '__main__':
 
-    icontext = ImageContext().read_image('imgs/ufc.jpg')
-    icontext.to_grayscale()
+    # icontext = ImageContext().read_image('imgs/ufc.jpg')
+    # icontext.to_grayscale()
+
+    # imgio.display(icontext.image)
+
+    disk_filter = filtering.get_circular_filter(75, gaussian=True)
+
+    # imgio.display(disk_filter * 255)
+    # imgio.display(disk_filter_n * 255)
+
+    print(disk_filter.shape)
+
+    imgio.display(disk_filter)
     # # image_context.apply_transform(intensity.normalize)
     # img = image_context.image
 

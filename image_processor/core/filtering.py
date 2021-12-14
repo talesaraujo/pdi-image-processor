@@ -2,6 +2,8 @@
 import numpy as np
 from typing import Any
 from image_processor.core import kernels, intensity
+from skimage import filters
+from skimage.morphology import disk
 
 
 def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:
@@ -141,3 +143,23 @@ def idft2(F: np.ndarray) -> np.ndarray:
                     f[x, y] += (1 / (M * N)) * F[u, v] * np.exp(2j * np.pi * ((u*x / M) + (v*y / N)))
 
     return f
+
+
+def get_circular_filter(radius: int, negative: bool=False, gaussian: bool=False, sigma: float=5) -> np.ndarray:
+    """Creates a circular image, with a steep or smooth color shifting.
+    
+    If the image is supposed to have a radius of R, the output will have 
+    dimensions of R+1 x R+1 elements.
+
+    """
+    disk_filter = disk(radius)
+    
+    if negative:
+        disk_filter = intensity.negative(disk_filter)
+
+    disk_filter *= 255
+
+    if gaussian:
+        disk_filter = filters.gaussian(disk_filter, sigma=sigma)
+
+    return disk_filter
