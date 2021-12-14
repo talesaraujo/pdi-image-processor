@@ -1,12 +1,16 @@
-# TODO: Implement thresholding (limizarização)
+# TODO: Implement thresholding (limizarização)!!!
 import numpy as np
-from typing import Any
 from image_processor.core import kernels, intensity
 from skimage import filters
 from skimage.morphology import disk
 
 
 def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.ndarray:
+    """Applies the two-dimentional convolution with a certain mask (filter).
+    
+    In order to prevent image shrinking, this algorithm fills extra values with zeros,
+    so that the output image will have darkened borders. 
+    """
     # Apply cross-relation
     filter = np.flipud(np.fliplr(filter))
 
@@ -50,11 +54,13 @@ def convolve2D(img: np.ndarray, filter: np.ndarray=None, strides: int=1) -> np.n
 
 
 def laplacian(img: np.ndarray, rescale=True) -> np.ndarray:
+    """Returns the image with its borders highlighted (by Laplacian filter)."""
     img_l = convolve2D(img, kernels.LAPLACIAN)
     return intensity.rescale(img_l) if rescale else img_l
 
 
 def high_boost(img: np.ndarray) -> np.ndarray:
+    """Improves the image via High-Boost processing (by using the Gaussian Filter)."""
     img_g = convolve2D(img, kernels.GAUSSIAN_BLUR_5x5)
     img_b = img - img_g
     img_p = img + img_b
@@ -145,12 +151,11 @@ def idft2(F: np.ndarray) -> np.ndarray:
     return f
 
 
-def get_circular_filter(radius: int, negative: bool=False, gaussian: bool=False, sigma: float=5) -> np.ndarray:
+def get_circular_filter(radius: int, negative: bool=False, gaussian: bool=False, sigma: float=3) -> np.ndarray:
     """Creates a circular image, with a steep or smooth color shifting.
     
     If the image is supposed to have a radius of R, the output will have 
     dimensions of R+1 x R+1 elements.
-
     """
     disk_filter = disk(radius)
     
@@ -163,3 +168,19 @@ def get_circular_filter(radius: int, negative: bool=False, gaussian: bool=False,
         disk_filter = filters.gaussian(disk_filter, sigma=sigma)
 
     return disk_filter
+
+
+def gen_image_filter(img_source: np.ndarray, radius: int, negative: bool=False, gaussian: bool=False, sigma: float=3) -> np.ndarray:
+    """Generates a circular filter that is exactly the same size as the image."""
+    circular_filter = get_circular_filter(radius, negative, gaussian, sigma)
+    complete_filter = np.ones(img_source.shape) if negative else np.zeros(img_source.shape)
+
+    half_shape = tuple(np.array(img_source.shape) / 2)
+    half_shape = tuple(np.int(np.floor(value)) for value in half_shape)
+
+    complete_filter[
+        half_shape[0]-radius:half_shape[0]+radius+1,
+        half_shape[1]-radius:half_shape[1]+radius+1
+    ] = circular_filter
+
+    return complete_filter
