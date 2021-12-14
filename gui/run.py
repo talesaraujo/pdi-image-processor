@@ -42,7 +42,7 @@ MENU_DEF = [
     ],
     [
         'Mode', [
-            'RGB',
+            'RGB (TODO)',
             'Grayscale'
         ]
     ],
@@ -62,7 +62,7 @@ MENU_DEF = [
     ],
     [
         'Filtering', [
-            'Generic Convolution',
+            'Generic Convolution (TODO)',
             'Gaussian Blur', [
                 '3x3',
                 '5x5',
@@ -409,7 +409,8 @@ while True:
 
 
     elif event == "Low-Pass Filter":
-        if icontext.image is not None:            
+        if icontext.image is not None:
+            print(icontext.image.shape)         
             lp_input_popup = inputs.get_frequency_filter_stats()
             lp_input_event, lp_input_values = lp_input_popup.read()
             lp_input_popup.close()
@@ -434,14 +435,15 @@ while True:
 
 
     elif event == "High-Pass Filter":
-        if icontext.image is not None:            
-            lp_input_popup = inputs.get_frequency_filter_stats()
-            lp_input_event, lp_input_values = lp_input_popup.read()
-            lp_input_popup.close()
+        if icontext.image is not None:
+            print(icontext.image.shape)        
+            hp_input_popup = inputs.get_frequency_filter_stats()
+            hp_input_event, hp_input_values = hp_input_popup.read()
+            hp_input_popup.close()
 
-            if lp_input_values[0]:
-                radius_size = int(lp_input_values[0])
-                use_gaussian = lp_input_values[1]
+            if hp_input_values[0]:
+                radius_size = int(hp_input_values[0])
+                use_gaussian = hp_input_values[1]
 
                 img_hp = filtering.apply_frequency_filtering(
                     img=icontext.image,
