@@ -55,6 +55,7 @@ if __name__ == '__main__':
     complete_filter = filtering.gen_image_filter(
         img_source=img_t,
         radius=30,
+        negative=False,
         gaussian=True
     )
 
@@ -75,7 +76,7 @@ if __name__ == '__main__':
     # complete_filter_inv = intensity.negative(complete_filter)
     # complete_filter_inv = intensity.normalize(complete_filter_inv)
 
-    imgio.display(intensity.rescale(complete_filter))
+    imgio.display(complete_filter)
 
     # Applying filter over fft transformed image
     img_t_proc = np.multiply(img_t, complete_filter)
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     img_t_proc_d[img_t_proc_d > 1000] = 1000
 
     # Rescale 
-    img_t_d = intensity.normalize(img_t_d)
+    # img_t_d = intensity.normalize(img_t_d)
 
     # Display Processed Transformed Image
     # imgio.display(img_t_proc_d)

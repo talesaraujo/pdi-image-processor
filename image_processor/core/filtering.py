@@ -1,5 +1,6 @@
 # TODO: Implement thresholding (limizarização)!!!
 import numpy as np
+from image_processor import imgio
 from image_processor.core import kernels, intensity
 from skimage import filters
 from skimage.morphology import disk
@@ -184,3 +185,69 @@ def gen_image_filter(img_source: np.ndarray, radius: int, negative: bool=False, 
     ] = circular_filter
 
     return complete_filter
+
+
+def apply_frequency_filtering(img: np.ndarray, filter_type: str, radius: int, gaussian: bool=False, std: float=3) -> None:
+    """Applies the fourier transform.
+
+    Parameters
+    ----------
+    img : np.ndarray
+        The image.
+    filter_type : str in { 'low', 'high' }
+        The desired filter (low-pass or high-pass).
+    
+    NOTE: The image is supposed to be normalized [0..1]
+    """
+    # ONWARDS STEP: Fourier Transform
+    if img.shape[0] <= 32:
+        # Apply my transform
+        img_t = dft2(img)
+    
+    else:
+        # Image too large, use np-fft instead
+        img_t = np.fft.fft2(img)
+    
+    # Visualization of Fourier Transform
+    img_t = np.fft.fftshift(img_t) # Shift frequencies to origin
+    img_t_vis = np.abs(img_t) # Generate visualization
+    img_t_vis[img_t_vis  > 2000] = 2000 # Cut off extreme values
+    img_t_vis = intensity.rescale(img_t_vis) # Avoid negative values
+    imgio.display(img_t_vis)
+
+    if filter_type == 'low':
+        complete_filter = gen_image_filter(
+            img_source=img_t,
+            radius=radius,
+            negative=False,
+            gaussian=True,
+            sigma=std
+        )
+    
+    if filter_type == 'high':
+        complete_filter = gen_image_filter(
+            img_source=img_t,
+            radius=radius,
+            negative=True,
+            gaussian=gaussian,
+            sigma=std
+        )
+
+    # Display selected filter
+    imgio.display(complete_filter)
+
+    # Actually apply the filter on the image
+    img_t_proc = np.multiply(img_t, complete_filter)
+
+    # Display Processed Transformed Image (abs value)
+    img_t_proc_vis = np.abs(img_t_proc)
+    # Cut off extreme values
+    img_t_proc_vis[img_t_proc_vis > 1000] = 1000
+
+    # BACKWARS STEP: Inverse Transform
+    img_t_proc = np.fft.ifftshift(img_t_proc)
+    img_proc = np.fft.ifft2(img_t_proc)
+
+    # Visualization of the processed image
+    img_proc_d = np.real(img_proc)
+    img_proc_d = intensity.rescale(img_proc_d)
