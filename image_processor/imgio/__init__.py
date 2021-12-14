@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-from core import sampling
+from image_processor.core import sampling
 
 GRAYSCALE_DOMAIN = (0, 256)
 
@@ -73,6 +73,7 @@ def plot_interpolation_function(img: np.ndarray, pa: tuple, pb: tuple, f_output:
         height=histogram,
         color='gray'
     )
+    plt.title("Selected interpolated function plot")
     plt.plot(domain, f_output, color='black')
     plt.plot(pa[0], pa[1], 'go')
     plt.plot(pb[0], pb[1], 'ro')

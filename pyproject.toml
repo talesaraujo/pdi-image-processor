@@ -1,19 +1,19 @@
 [tool.poetry]
-name = "backend"
+name = "pdi-image-processor"
 version = "0.1.0"
 description = ""
 authors = ["Tales Araujo <talesaraujodossantos@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8,<3.11"
-fastapi = "^0.70.0"
+python = ">=3.8,<3.11"
+numpy = "^1.21.4"
+pandas = "^1.3.5"
+matplotlib = "^3.5.1"
 opencv-python = "^4.5.4"
-uvicorn = {extras = ["standard"], version = "^0.15.0"}
-python-multipart = "^0.0.5"
-numpy = "^1.21.3"
+pysimplegui = "^4.55"
+ipython = "^7.30.1"
 
 [tool.poetry.dev-dependencies]
-ipdb = "^0.13.9"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

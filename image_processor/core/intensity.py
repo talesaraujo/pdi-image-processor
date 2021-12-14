@@ -1,5 +1,5 @@
 import numpy as np
-import imgio
+from image_processor import imgio
 
 GRAYSCALE_DOMAIN = (0, 256)
 
@@ -8,7 +8,7 @@ def normalize(img: np.ndarray) -> np.ndarray:
     return img / 255.0
 
 
-def set_brightness(img: np.ndarray, factor: int) -> np.ndarray:
+def set_brightness(img: np.ndarray, factor: float) -> np.ndarray:
     """Controls the image brightness through a certain numeric factor."""
     return factor * img
 
@@ -18,12 +18,12 @@ def negative(img: np.ndarray) -> np.ndarray:
     return 1 - img
 
 
-def log_transform(img: np.ndarray, c: int) -> np.ndarray:
+def log_transform(img: np.ndarray, c: float) -> np.ndarray:
     """Applies the logarithmic transformation over the input image."""
     return c * np.log(1 + img)
 
 
-def gamma_transform(img: np.ndarray, c: int, gamma: float) -> np.ndarray:
+def gamma_transform(img: np.ndarray, c: float, gamma: float) -> np.ndarray:
     """Applies the gamma transformation over the input image."""
     return c * (img ** gamma)
 
@@ -38,7 +38,7 @@ def rescale(img: np.ndarray) -> np.ndarray:
 
 def denormalize(img: np.ndarray) -> np.ndarray:
     """De-normalizes the image, at the range of [0..255]"""
-    return np.uint8(img * 255)
+    return np.int32(img * 255)
 
 
 def interpolate_points(pa: tuple, pb: tuple) -> None:
