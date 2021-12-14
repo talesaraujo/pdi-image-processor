@@ -199,6 +199,9 @@ def apply_frequency_filtering(img: np.ndarray, filter_type: str, radius: int, ga
     
     NOTE: The image is supposed to be normalized [0..1]
     """
+    if img.max() > 1:
+        img = intensity.normalize(img)
+
     # ONWARDS STEP: Fourier Transform
     if img.shape[0] <= 32:
         # Apply my transform
@@ -214,6 +217,7 @@ def apply_frequency_filtering(img: np.ndarray, filter_type: str, radius: int, ga
     img_t_vis[img_t_vis  > 2000] = 2000 # Cut off extreme values
     img_t_vis = intensity.rescale(img_t_vis) # Avoid negative values
     imgio.display(img_t_vis)
+    print(img_t_vis.max(), img_t_vis.min())
 
     if filter_type == 'low':
         complete_filter = gen_image_filter(
@@ -251,3 +255,7 @@ def apply_frequency_filtering(img: np.ndarray, filter_type: str, radius: int, ga
     # Visualization of the processed image
     img_proc_d = np.real(img_proc)
     img_proc_d = intensity.rescale(img_proc_d)
+
+    # imgio.display(img_proc_d)
+
+    return img_proc_d

@@ -77,7 +77,10 @@ MENU_DEF = [
                 'High-Boost'
             ],
             'Frequency Domain', [
-                'Fourier-Transform'
+                'Fourier-Transform', [
+                    'Low-Pass Filter',
+                    'High-Pass Filter'
+                ]
             ],
         ]
     ],
@@ -405,12 +408,49 @@ while True:
             sg.popup_error("No loaded image to apply effect!")
 
 
-    # elif event == "Fourier-Transform":
-    #     if icontext.image is not None:
-    #         sg.popup("Applied fourier transform")
+    elif event == "Low-Pass Filter":
+        if icontext.image is not None:            
+            lp_input_popup = inputs.get_frequency_filter_stats()
+            lp_input_event, lp_input_values = lp_input_popup.read()
+            lp_input_popup.close()
+
+            if lp_input_values[0]:
+                radius_size = int(lp_input_values[0])
+                use_gaussian = lp_input_values[1]
+
+                img_lp = filtering.apply_frequency_filtering(
+                    img=icontext.image,
+                    filter_type='low',
+                    radius=radius_size,
+                    gaussian=use_gaussian
+                )
+
+                icontext.image = intensity.denormalize(img_lp)
+                main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")
 
 
+    elif event == "High-Pass Filter":
+        if icontext.image is not None:            
+            lp_input_popup = inputs.get_frequency_filter_stats()
+            lp_input_event, lp_input_values = lp_input_popup.read()
+            lp_input_popup.close()
 
+            if lp_input_values[0]:
+                radius_size = int(lp_input_values[0])
+                use_gaussian = lp_input_values[1]
 
-    #     else:
-    #         sg.popup_error("No loaded image to apply effect!")
+                img_hp = filtering.apply_frequency_filtering(
+                    img=icontext.image,
+                    filter_type='high',
+                    radius=radius_size,
+                    gaussian=use_gaussian
+                )
+
+                icontext.image = intensity.denormalize(img_hp)
+                main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
+
+        else:
+            sg.popup_error("No loaded image to apply effect!")

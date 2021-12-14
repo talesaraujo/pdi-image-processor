@@ -34,3 +34,16 @@ def get_linear_piecewise():
         ],
         element_justification='c',
     )
+
+
+def get_frequency_filter_stats():
+    return sg.Window(
+        title="Circular filter properties",
+        element_justification='c',
+        layout=[
+            [sg.Text("Please set the range of the circular filter to have frequency cut off")],
+            [sg.Text("Radius Size: ", size=(15,1)), sg.Input(pad=20)],
+            [sg.Checkbox('Use gaussian filter', default=False)],
+            [sg.Submit(button_text="Apply"), sg.Cancel()]
+        ]
+    )
