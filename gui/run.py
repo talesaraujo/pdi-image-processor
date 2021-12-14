@@ -425,6 +425,7 @@ while True:
                     gaussian=use_gaussian
                 )
 
+                icontext.prev_state = icontext.image
                 icontext.image = intensity.denormalize(img_lp)
                 main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 
@@ -449,6 +450,7 @@ while True:
                     gaussian=use_gaussian
                 )
 
+                icontext.prev_state = icontext.image
                 icontext.image = intensity.denormalize(img_hp)
                 main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 

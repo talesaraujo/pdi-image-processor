@@ -12,7 +12,7 @@ from typing import Any
 if __name__ == '__main__':
 
     # Applying Low Pass Filter and etc with Fourier Transform
-    icontext = ImageContext().read_image('imgs/goats.jpg')
+    icontext = ImageContext().read_image('imgs/ufc.jpg')
     # icontext = ImageContext().read_image('imgs/lena_original.png')
     icontext.to_grayscale()
     icontext.normalize()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     # complete_filter = np.zeros(img_t.shape) # or ones...
     complete_filter = filtering.gen_image_filter(
         img_source=img_t,
-        radius=40,
+        radius=150,
         negative=True,
         gaussian=False
     )
