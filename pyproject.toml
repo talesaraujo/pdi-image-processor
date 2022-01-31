@@ -11,9 +11,10 @@ pandas = "^1.3.5"
 matplotlib = "^3.5.1"
 opencv-python = "^4.5.4"
 pysimplegui = "^4.55"
-ipython = "^7.30.1"
+ipython = "7.31.1"
 scikit-image = "^0.19.1"
 ipdb = "^0.13.9"
+Pillow = "9.0.0"
 
 [tool.poetry.dev-dependencies]
 
