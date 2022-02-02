@@ -1,5 +1,5 @@
 """Logic related to the Huffman Coding process."""
-from typing import Any
+from typing import Any, List
 from loguru import logger
 
 import numpy as np
@@ -34,8 +34,23 @@ class Node:
 class HuffmanCoding:
 
     @staticmethod
-    def generate_tree(freqs: np.ndarray) -> None:
-        logger.debug(f"SUM FREQS: {np.sum(freqs)}")
+    def generate_tree(freqs: np.ndarray) -> List[Node]:
+        """Generates the Huffman Tree for a certain set of symbols given their
+        frequencies.  
+        
+        Arguments
+        ---------
+        freqs: numpy.ndarray
+            The histogram of frequencies representing each image pixel indexed
+            through the [0..255] interval
+
+        Returns
+        -------
+        priority_queue: Node object
+            The Node object element representing the Huffman Tree Coding
+            for that set of frequencies (i.e. the root node).
+        """
+        # logger.debug(f"SUM FREQS: {np.sum(freqs)}")
 
         # Assemble a priority queue ordered by freqs
         priority_list = np.array([(i, f) for i, f in enumerate(freqs)])
@@ -69,7 +84,56 @@ class HuffmanCoding:
             # Re-sort the queue by freq/prob
             priority_queue.sort()
 
-        logger.debug("HUFFMAN TREE")
-        logger.debug(priority_queue)
+        # logger.debug("HUFFMAN TREE")
+        # logger.debug(priority_queue)
         
-        return priority_queue
+        return priority_queue[0]
+
+
+    @staticmethod
+    def get_codes(huffman_tree: Node) -> np.ndarray:
+        """Returns the symbol codes given the Huffman Tree.
+        
+        Performs a deep-first search with preorder approach throughout the
+        Huffman Tree in order to recover all binary codes assigned to the
+        symbols descripted on the leave nodes.
+
+        Parameters
+        ----------
+        huffman_tree: Node
+            The tree-like data structure representing the Huffman Tree Coding
+            for a certain set of symbols.
+        
+        Returns
+        -------
+        encoded_strings: list of tuples
+            The symbol and its binary representation according to the HT.
+        t"""
+        encoded_strings = list()
+
+        def dfs_traverse(node: Node, code_string: str):
+            if node is None:
+                return 
+
+            if node.code:
+                code_string += node.code
+
+            dfs_traverse(node.left_child, code_string)
+            dfs_traverse(node.right_child, code_string)
+
+            if node.symbol:
+                encoded_strings.append(
+                    [node.symbol, code_string]
+                )
+                code_string = code_string[:-1]
+        
+        dfs_traverse(huffman_tree, code_string="")
+
+
+        encoded_strings = np.array(encoded_strings, dtype=np.int)
+        encoded_strings = encoded_strings[np.argsort(encoded_strings[:, 0])]
+
+        for symb, string in encoded_strings:
+            logger.debug(f"VALUE {symb:3} | CODE {int(string):15}")
+        
+        return encoded_strings

@@ -5,7 +5,7 @@ import numpy as np
 import imgio
 
 from image_processor import ImageContext
-from decompr import huffman
+from decompr.huffman import HuffmanCoding
 from core import intensity, filtering, kernels, sampling
 from typing import Any
 from loguru import logger
@@ -24,10 +24,23 @@ logger.add(
 
 if __name__ == '__main__':
 
-    icontext = ImageContext().read_image('imgs/benchmark.bmp')
-    img = icontext.image
-    img = img[:, :, 0]
+    # icontext = ImageContext().read_image('imgs/benchmark.bmp')
+    # img = icontext.image
+    # img = img[:, :, 0]
 
-    fqs = sampling.histogram(img)
+    # fqs = sampling.histogram(img)
 
-    huffman.HuffmanCoding.generate_tree(fqs)
+    fqs = np.array([5, 1, 6, 3])
+
+    max_value = np.max(fqs)
+    max_index = fqs.tolist().index(max_value)
+
+    min_value = np.min(fqs)
+    min_index = fqs.tolist().index(min_value)
+
+    huff_tree = HuffmanCoding.generate_tree(fqs)
+
+    codes = HuffmanCoding.get_codes(huff_tree)
+
+    logger.debug(f"Most frequent value: {max_index}")
+    logger.debug(f"Least frequent value: {min_index}")
