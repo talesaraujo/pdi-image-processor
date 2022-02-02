@@ -2,10 +2,19 @@
 from typing import Any, List
 from loguru import logger
 
+from pprint import pprint
+
 import numpy as np
 
 
 class Node:
+    """Provides a representation of a binary tree's node.
+    
+    This representation is built particularly for the Huffman Tree algorithm,
+    so in addition to the child nodes, it includes the symbols and their
+    probabilities in terms of frequencies. It can represent the entire tree
+    as well, as long as the referred node is the root itself.
+    """
     def __init__(self,
                 prob: int,
                 symbol: Any="",
@@ -18,14 +27,7 @@ class Node:
         self.code = ''
     
     def __repr__(self) -> str:
-        if self.left_child and self.right_child:
-            return f"{{ P: {self.prob:5} | S: {self.symbol:3} | LC: {self.left_child} | RC: {self.right_child}}}"
-        elif self.left_child:
-            return f"{{ P: {self.prob:5} | S: {self.symbol:3} | LC: {self.left_child} }}"
-        elif self.right_child:
-            return f"{{ P: {self.prob:5} | S: {self.symbol:3} | RC: {self.right_child} }}"
-        else:
-            return f"{{ P: {self.prob:5} | S: {self.symbol:3} }}"
+        return repr(self.__dict__)
     
     def __lt__(self, other: Any) -> bool:
         return self.prob < other.prob 
@@ -85,7 +87,7 @@ class HuffmanCoding:
             priority_queue.sort()
 
         # logger.debug("HUFFMAN TREE")
-        # logger.debug(priority_queue)
+        # logger.debug(priority_queue[0])
         
         return priority_queue[0]
 

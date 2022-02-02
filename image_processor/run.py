@@ -29,7 +29,6 @@ if __name__ == '__main__':
     # img = img[:, :, 0]
 
     # fqs = sampling.histogram(img)
-
     fqs = np.array([5, 1, 6, 3])
 
     max_value = np.max(fqs)
