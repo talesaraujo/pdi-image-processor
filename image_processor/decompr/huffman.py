@@ -17,14 +17,14 @@ class Node:
     """
     def __init__(self,
                 prob: int,
-                symbol: Any="",
+                symbol: str="",
                 left_child: Any=None,
                 right_child: Any=None) -> None:
         self.prob = prob
         self.symbol = symbol
+        self.code = ""
         self.left_child = left_child
         self.right_child = right_child
-        self.code = ''
     
     def __repr__(self) -> str:
         return repr(self.__dict__)
@@ -86,8 +86,8 @@ class HuffmanCoding:
             # Re-sort the queue by freq/prob
             priority_queue.sort()
 
-        # logger.debug("HUFFMAN TREE")
-        # logger.debug(priority_queue[0])
+        logger.debug("HUFFMAN TREE")
+        logger.debug(priority_queue[0])
         
         return priority_queue[0]
 
@@ -123,7 +123,7 @@ class HuffmanCoding:
             dfs_traverse(node.left_child, code_string)
             dfs_traverse(node.right_child, code_string)
 
-            if node.symbol:
+            if str(node.symbol):
                 encoded_strings.append(
                     [node.symbol, code_string]
                 )
@@ -131,11 +131,10 @@ class HuffmanCoding:
         
         dfs_traverse(huffman_tree, code_string="")
 
-
-        encoded_strings = np.array(encoded_strings, dtype=np.int)
+        encoded_strings = np.array(encoded_strings, dtype=str)
         encoded_strings = encoded_strings[np.argsort(encoded_strings[:, 0])]
 
         for symb, string in encoded_strings:
-            logger.debug(f"VALUE {symb:3} | CODE {int(string):15}")
+            logger.debug(f"VALUE {symb:3} | CODE {string:15}")
         
         return encoded_strings

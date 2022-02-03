@@ -24,12 +24,13 @@ logger.add(
 
 if __name__ == '__main__':
 
-    # icontext = ImageContext().read_image('imgs/benchmark.bmp')
-    # img = icontext.image
-    # img = img[:, :, 0]
-
-    # fqs = sampling.histogram(img)
-    fqs = np.array([5, 1, 6, 3])
+    icontext = ImageContext().read_image('imgs/benchmark.bmp')
+    img = icontext.image
+    img = img[:, :, 0]
+    fqs = sampling.histogram(img)
+    # fqs = np.array([5, 1, 6, 3])
+    # fqs = np.array([7, 1, 6, 2, 5])
+    fqs = np.array([10, 15, 12, 3, 4, 13, 1])
 
     max_value = np.max(fqs)
     max_index = fqs.tolist().index(max_value)
