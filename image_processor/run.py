@@ -6,9 +6,12 @@ import imgio
 
 from image_processor import ImageContext
 from decompr.huffman import HuffmanCoding
+from decompr import img_parser
 from core import intensity, filtering, kernels, sampling
 from typing import Any
 from loguru import logger
+
+BENCHIMAGE_PATH = 'imgs/benchmark.bmp'
 
 logger.remove()
 logger.add(
@@ -24,23 +27,24 @@ logger.add(
 
 if __name__ == '__main__':
 
-    icontext = ImageContext().read_image('imgs/benchmark.bmp')
-    img = icontext.image
-    img = img[:, :, 0]
-    fqs = sampling.histogram(img)
-    # fqs = np.array([5, 1, 6, 3])
-    # fqs = np.array([7, 1, 6, 2, 5])
-    fqs = np.array([10, 15, 12, 3, 4, 13, 1])
+    # # img_parser.parse_imgfile(BENCHIMAGE_PATH)
+    # filetype, filesize, reserved_4 = img_parser.parse_imgfile(BENCHIMAGE_PATH)
+    # filetype, filesize, reserved_4 = b''.join(filetype), b''.join(filesize), b''.join(reserved_4)
 
-    max_value = np.max(fqs)
-    max_index = fqs.tolist().index(max_value)
+    # print(filetype.hex())
+    # print(filesize.hex())
 
-    min_value = np.min(fqs)
-    min_index = fqs.tolist().index(min_value)
 
-    huff_tree = HuffmanCoding.generate_tree(fqs)
+    # # print(filetype.decode('ASCII'))
+    # print(int.from_bytes(filesize, byteorder="little", signed=False))
 
-    codes = HuffmanCoding.get_codes(huff_tree)
+    # print(int.from_bytes(reserved_4, byteorder="little", signed=False))
 
-    logger.debug(f"Most frequent value: {max_index}")
-    logger.debug(f"Least frequent value: {min_index}")
+    bvalue = img_parser.read_file_slice(
+        img_fpath=BENCHIMAGE_PATH,
+        start_byte=2,
+        end_byte=6
+    )
+
+    print(img_parser.bytes_to_integer(bvalue))
+

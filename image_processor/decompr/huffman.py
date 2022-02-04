@@ -52,8 +52,6 @@ class HuffmanCoding:
             The Node object element representing the Huffman Tree Coding
             for that set of frequencies (i.e. the root node).
         """
-        # logger.debug(f"SUM FREQS: {np.sum(freqs)}")
-
         # Assemble a priority queue ordered by freqs
         priority_list = np.array([(i, f) for i, f in enumerate(freqs)])
         priority_list = priority_list[np.argsort(priority_list[:, 1])]
@@ -61,12 +59,7 @@ class HuffmanCoding:
         # At this point this list is supposed to be sorted by probability/freq
         priority_queue = [ Node(prob=fq, symbol=symb) for symb, fq in priority_list ]
 
-        # priority_queue = priority_queue[:7] # TODO: Remove this crop
-
         while len(priority_queue) > 1:
-            # Initial length of priority queue
-            ini_length_pqueue = len(priority_queue)
-
             # Remove the two lowest prob values
             node_0 = priority_queue.pop(0)
             node_1 = priority_queue.pop(0)
@@ -79,8 +72,6 @@ class HuffmanCoding:
                 right_child=node_1
             )
 
-            assert ini_length_pqueue > len(priority_queue)
-
             # Insert the new created node
             priority_queue.append(new_node)
             # Re-sort the queue by freq/prob
@@ -88,7 +79,6 @@ class HuffmanCoding:
 
         logger.debug("HUFFMAN TREE")
         logger.debug(priority_queue[0])
-        
         return priority_queue[0]
 
 
