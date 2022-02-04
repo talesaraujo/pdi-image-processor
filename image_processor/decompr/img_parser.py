@@ -2,11 +2,11 @@
 from typing import Tuple, List
 import os
 
-def read_file_slice(img_fpath: str, end_byte: int, start_byte: int=0) -> bytes:
+def read_file_slice(img_fpath: str, start_byte: int=0, end_byte: int=-1) -> bytes:
     """Returns a bytes sequence indexed via byte"""
     file_size = os.path.getsize(img_fpath)
 
-    if not end_byte:
+    if end_byte < 0:
         end_byte = file_size
 
     bytelist = list()
@@ -21,11 +21,14 @@ def read_file_slice(img_fpath: str, end_byte: int, start_byte: int=0) -> bytes:
 
 
 def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:
-    with open(filepath, "rb") as img_file:
-        filetype = [ img_file.read(1) for _ in range(2) ]
-        filesize = [ img_file.read(1) for _ in range(4) ]
-        reserved_4 = [ img_file.read(1) for _ in range(2) ]
-        return filetype, filesize, reserved_4
+    """TODO: Fill in"""
+    FILETYPE = read_file_slice(filepath, 0, 2)
+    FILESIZE = read_file_slice(filepath, 2, 6)
+    RESERVED = read_file_slice(filepath, 6, 10)
+    PIXEL_DATA_OFFSET = read_file_slice(filepath, 10, 14)
+
+    print(PIXEL_DATA_OFFSET)
+    print(bytes_to_integer(PIXEL_DATA_OFFSET))
 
 
 def bytes_to_integer(bytes_sequence: bytes) -> int:

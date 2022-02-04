@@ -40,11 +40,12 @@ if __name__ == '__main__':
 
     # print(int.from_bytes(reserved_4, byteorder="little", signed=False))
 
-    bvalue = img_parser.read_file_slice(
-        img_fpath=BENCHIMAGE_PATH,
-        start_byte=2,
-        end_byte=6
-    )
+    # bvalue = img_parser.read_file_slice(
+    #     img_fpath=BENCHIMAGE_PATH,
+    #     start_byte=2,
+    #     end_byte=6
+    # )
 
-    print(img_parser.bytes_to_integer(bvalue))
+    # print(img_parser.bytes_to_integer(bvalue))
+    img_parser.parse_imgfile(BENCHIMAGE_PATH)
 
