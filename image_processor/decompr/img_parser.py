@@ -1,9 +1,17 @@
 """TODO: Fill in this with useful info"""
 from typing import Tuple, List
 import os
+from image_processor.decompr import constants
 
-def read_file_slice(img_fpath: str, start_byte: int=0, end_byte: int=-1) -> bytes:
+
+def bytes_to_integer(bytes_sequence: bytes, sign: bool=False) -> int:
+    return int.from_bytes(bytes_sequence, byteorder="little", signed=sign)
+
+
+def read_file_slice(img_fpath: str, indexes: tuple=(0, -1)) -> bytes:
     """Returns a bytes sequence indexed via byte"""
+    start_byte, end_byte = indexes
+
     file_size = os.path.getsize(img_fpath)
 
     if end_byte < 0:
@@ -22,21 +30,53 @@ def read_file_slice(img_fpath: str, start_byte: int=0, end_byte: int=-1) -> byte
 
 def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:
     """TODO: Fill in"""
-    FILETYPE = read_file_slice(filepath, 0, 2)
-    FILESIZE = read_file_slice(filepath, 2, 6)
-    RESERVED = read_file_slice(filepath, 6, 10)
-    PIXEL_DATA_OFFSET = read_file_slice(filepath, 10, 14)
-
-    print(PIXEL_DATA_OFFSET)
-    print(bytes_to_integer(PIXEL_DATA_OFFSET))
-
-
-def bytes_to_integer(bytes_sequence: bytes) -> int:
-    return int.from_bytes(bytes_sequence, byteorder="little", signed=False)
+    pixel_data_offset = read_file_slice(
+        img_fpath=filepath,
+        indexes=constants.IMAGE_WIDTH
+        )
+    
+    print(f"HEX {pixel_data_offset.hex()}")
+    print(f"DEC {bytes_to_integer(pixel_data_offset, sign=False)}")
 
 
+def get_pixels_info(img_fpath: str) -> List[tuple]:
+    file_size = os.path.getsize(img_fpath)
+    bytelist = list()
 
-# def get_header(filepath: str) -> bytes:
-#     with open(filepath, "rb") as img_file:
-#         h_bytes = img_file.read(14)
-#     return h_bytes
+    with open(img_fpath, "rb") as img_file:
+        for counter in range(file_size):
+            byte = img_file.read(1)
+            if counter >= 122:
+                bytelist.append(byte)
+                
+    return bytelist
+
+
+def get_pixels_hexlist(img_fpath: str) -> list:
+    pixels_info = get_pixels_info(img_fpath)
+
+    pixels_list = list()
+
+    for i in range(len(pixels_info)):
+        if (i % 3) == 0:
+            pixels_list.append(
+                (pixels_info[i], pixels_info[i+1], pixels_info[i+2])
+            )
+    
+    pixels_list = [
+        tuple(pixel[i].hex().upper() for i in range(3))
+        for pixel in pixels_list
+    ]
+
+    return pixels_list
+
+
+def convert_to_decimal(pixels_hexlist: list) -> list:
+    """Returns the values in decimal format, as strings, for the BGR channels
+    that are represented by the input of hexadecimal values."""
+    pixel_list = [
+        tuple(str(int(pixel[i], 16)) for i in range(3))
+        for pixel in pixels_hexlist
+    ]
+
+    return pixel_list
