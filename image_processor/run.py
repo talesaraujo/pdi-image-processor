@@ -31,6 +31,14 @@ if __name__ == '__main__':
     # imgio.display(img_cxt.image)
     # print(img_parser.bytes_to_integer(bvalue))
 
-    # pixels_bytes = img_parser.get_pixels_info(BENCHIMAGE_PATH)
+    # Num bits actually used by image data
+    # 6819840
 
-    # print(len(pixels_bytes)/3)
+    pixels_binaries = img_parser.get_pixels_binlist(BENCHIMAGE_PATH)
+
+    print(len(pixels_binaries))
+
+    for pixel in pixels_binaries[:10]:
+        print(pixel)
+    
+    print(len(pixels_binaries[0][1]))

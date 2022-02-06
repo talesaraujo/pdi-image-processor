@@ -30,8 +30,8 @@ def read_file_slice(img_fpath: str, indexes: tuple=(0, -1)) -> bytes:
     return b"".join(bytelist)
 
 
-def get_pixels_info(img_fpath: str) -> List[tuple]:
-    """Returns only the information related to the image pixels."""
+def get_pixels_info(img_fpath: str) -> List[Tuple[bytes]]:
+    """Returns only the information related to the image pixels, in bytes."""
     pixel_data_offset = read_file_slice(
         img_fpath,
         indexes=constants.PIXEL_DATA_OFFSET
@@ -50,9 +50,30 @@ def get_pixels_info(img_fpath: str) -> List[tuple]:
     return bytelist
 
 
-def get_pixels_hexlist(img_fpath: str) -> list:
-    """Returns a list of 3d tuples with the hexadecimal values that represent
-    the BGR colors."""
+def get_pixels_bytelist(img_fpath: str) -> List[Tuple[bytes]]:
+    """Returns a list of 3D tuples with the byte values that represent
+    the BGR pixel colors."""
+    pixels_info = get_pixels_info(img_fpath)
+
+    pixels_list = list()
+
+    for i in range(len(pixels_info)):
+        if (i % 3) == 0:
+            pixels_list.append(
+                (pixels_info[i], pixels_info[i+1], pixels_info[i+2])
+            )
+    
+    pixels_list = [
+        tuple(pixel[i] for i in range(3))
+        for pixel in pixels_list
+    ]
+
+    return pixels_list
+
+
+def get_pixels_hexlist(img_fpath: str) -> List[Tuple[str]]:
+    """Returns a list of 3D tuples with the hexadecimal values that represent
+    the BGR pixel colors."""
     pixels_info = get_pixels_info(img_fpath)
 
     pixels_list = list()
@@ -68,6 +89,17 @@ def get_pixels_hexlist(img_fpath: str) -> list:
         for pixel in pixels_list
     ]
 
+    return pixels_list
+
+
+def get_pixels_binlist(img_fpath: str) -> List[Tuple[str]]:
+    """Returns a list of 3D tuples with the binary balues that represent the
+    BGR pixel colors."""
+    pixels_list = get_pixels_hexlist(img_fpath)
+    pixels_list = [
+        tuple(bin(int(pixel[i], 16)) for i in range(3))
+        for pixel in pixels_list
+    ]
     return pixels_list
 
 
