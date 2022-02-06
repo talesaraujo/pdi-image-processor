@@ -31,9 +31,6 @@ if __name__ == '__main__':
     # imgio.display(img_cxt.image)
     # print(img_parser.bytes_to_integer(bvalue))
 
-    pixels_info = img_parser.get_pixels_hexlist(BENCHIMAGE_PATH)
-    pixels_info = img_parser.convert_to_decimal(pixels_info)
+    # pixels_bytes = img_parser.get_pixels_info(BENCHIMAGE_PATH)
 
-    for value in pixels_info[:10]:
-        print(value)
-
+    # print(len(pixels_bytes)/3)

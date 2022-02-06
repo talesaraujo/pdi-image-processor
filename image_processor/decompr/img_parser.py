@@ -5,11 +5,13 @@ from image_processor.decompr import constants
 
 
 def bytes_to_integer(bytes_sequence: bytes, sign: bool=False) -> int:
+    """Given a sequence of bytes, it returns the integer representation of
+    such sequence, ordered via little endian setup."""
     return int.from_bytes(bytes_sequence, byteorder="little", signed=sign)
 
 
 def read_file_slice(img_fpath: str, indexes: tuple=(0, -1)) -> bytes:
-    """Returns a bytes sequence indexed via byte"""
+    """Returns a bytes sequence indexed via byte positions."""
     start_byte, end_byte = indexes
 
     file_size = os.path.getsize(img_fpath)
@@ -28,31 +30,29 @@ def read_file_slice(img_fpath: str, indexes: tuple=(0, -1)) -> bytes:
     return b"".join(bytelist)
 
 
-def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:
-    """TODO: Fill in"""
-    pixel_data_offset = read_file_slice(
-        img_fpath=filepath,
-        indexes=constants.IMAGE_WIDTH
-        )
-    
-    print(f"HEX {pixel_data_offset.hex()}")
-    print(f"DEC {bytes_to_integer(pixel_data_offset, sign=False)}")
-
-
 def get_pixels_info(img_fpath: str) -> List[tuple]:
+    """Returns only the information related to the image pixels."""
+    pixel_data_offset = read_file_slice(
+        img_fpath,
+        indexes=constants.PIXEL_DATA_OFFSET
+    )
+    pixel_data_offset = bytes_to_integer(pixel_data_offset)
+
     file_size = os.path.getsize(img_fpath)
     bytelist = list()
 
     with open(img_fpath, "rb") as img_file:
         for counter in range(file_size):
             byte = img_file.read(1)
-            if counter >= 122:
+            if counter >= pixel_data_offset:
                 bytelist.append(byte)
                 
     return bytelist
 
 
 def get_pixels_hexlist(img_fpath: str) -> list:
+    """Returns a list of 3d tuples with the hexadecimal values that represent
+    the BGR colors."""
     pixels_info = get_pixels_info(img_fpath)
 
     pixels_list = list()
@@ -80,3 +80,14 @@ def convert_to_decimal(pixels_hexlist: list) -> list:
     ]
 
     return pixel_list
+
+
+# def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:
+#     """TODO: Fill in"""
+#     pixel_data_offset = read_file_slice(
+#         img_fpath=filepath,
+#         indexes=constants.IMAGE_WIDTH
+#         )
+    
+#     print(f"HEX {pixel_data_offset.hex()}")
+#     print(f"DEC {bytes_to_integer(pixel_data_offset, sign=False)}")

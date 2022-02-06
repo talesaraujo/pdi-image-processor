@@ -81,7 +81,3 @@ CT_RED              = (55, 56)
 CT_GREEN            = (56, 57)
 CT_BLUE             = (57, 58)
 CT_RESERVED         = (58, 59)
-
-# Benchmark image has 284160 pixels
-# Pixels starts at position 122
-STARTING_BYTE       = 122 # TODO: Set this dinamically via pixel_data_offset
