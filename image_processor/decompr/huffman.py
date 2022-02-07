@@ -2,6 +2,7 @@
 from typing import Any, List, Tuple
 from image_processor.core import sampling
 
+import pickle
 import numpy as np
 
 
@@ -125,20 +126,26 @@ class HuffmanCoding:
         )
         encoded_strings = encoded_strings[np.argsort(encoded_strings[:, 0])]
         # for symb, string in encoded_strings:
-        #     logger.debug(f"VALUE {symb:3} | CODE {string:15}")        
+        #     logger.debug(f"VALUE {symb:3} | CODE {string:15}")     
         return encoded_strings
+    
+
+    @staticmethod
+    def codes_as_dict(huffman_codes: np.ndarray) -> dict:
+        """Converts np array of huffman optimal codes to dict."""
+        return { item[0]: item[1] for item in huffman_codes }
 
 
     @classmethod
     def encode(cls, bgr_channels: Tuple[np.ndarray]) -> None:
         """Returns the file according to the huffman tree codes."""
         # Add separator symbol to freqs, represented by 256
-        bgr_channels = tuple(np.append(ch, 256) for ch in bgr_channels)
+        # bgr_channels = tuple(np.append(ch, 256) for ch in bgr_channels)
 
         # Generate histogram frequencies for each channel
-        blue_hist  = sampling.histogram(bgr_channels[0], L=257)
-        green_hist = sampling.histogram(bgr_channels[1], L=257)
-        red_hist   = sampling.histogram(bgr_channels[2], L=257)
+        blue_hist  = sampling.histogram(bgr_channels[0])
+        green_hist = sampling.histogram(bgr_channels[1])
+        red_hist   = sampling.histogram(bgr_channels[2])
 
         # Generate Huffman Tree for each channel freq list
         b_ch_htree = cls.generate_tree(blue_hist)
@@ -150,10 +157,18 @@ class HuffmanCoding:
         g_ch_codes = cls.get_codes(g_ch_htree)
         r_ch_codes = cls.get_codes(r_ch_htree)
 
-        print(b_ch_codes)
+        print(b_ch_codes); print("")
 
-        # for element in b_ch_codes:
-        #     if int(element[0]) == 256:
-        #         print(element)
+        b_ch_codes_pkl = pickle.dumps(b_ch_codes)
+        g_ch_codes_pkl = pickle.dumps(g_ch_codes)
+        r_ch_codes_pkl = pickle.dumps(r_ch_codes)
 
+        # print(b_ch_codes_pkl)
+        b_ch_codes_back = pickle.loads(b_ch_codes_pkl)
 
+        print(b_ch_codes_back)
+
+        # print(len(b_ch_codes_pkl))
+        # print(len(g_ch_codes_pkl))
+        # print(len(r_ch_codes_pkl))
+        # print(len(b_ch_codes_pkl) + len(g_ch_codes_pkl) + len(r_ch_codes_pkl))
