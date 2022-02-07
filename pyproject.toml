@@ -15,7 +15,6 @@ ipython = "7.31.1"
 scikit-image = "^0.19.1"
 ipdb = "^0.13.9"
 Pillow = "9.0.0"
-loguru = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 

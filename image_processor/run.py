@@ -9,19 +9,9 @@ from decompr.huffman import HuffmanCoding
 from decompr import img_parser
 from core import intensity, filtering, kernels, sampling
 from typing import Any
-from loguru import logger
 
 BENCHIMAGE_PATH = 'imgs/benchmark.bmp'
 
-logger.remove()
-logger.add(
-    sys.stderr,
-    backtrace=True,
-    diagnose=True,
-    format="<green>{level}</green> | <level>{message}</level>",
-    colorize=True,
-    level="DEBUG"
-)
 
 # TODO: Create CLI (maybe?)
 
@@ -34,11 +24,10 @@ if __name__ == '__main__':
     # Num bits actually used by image data
     # 6819840
 
-    pixels_binaries = img_parser.get_pixels_binlist(BENCHIMAGE_PATH)
+    pixels_dec = img_parser.get_pixels_declist(BENCHIMAGE_PATH)
 
-    print(len(pixels_binaries))
+    blue_channel, green_channel, red_channel = img_parser.parse_channels(pixels_dec)
 
-    for pixel in pixels_binaries[:10]:
-        print(pixel)
-    
-    print(len(pixels_binaries[0][1]))
+    HuffmanCoding.encode(
+        (blue_channel, green_channel, red_channel)
+    )

@@ -1,7 +1,8 @@
 """TODO: Fill in this with useful info"""
 from typing import Tuple, List
-import os
 from image_processor.decompr import constants
+import os
+import numpy as np
 
 
 def bytes_to_integer(bytes_sequence: bytes, sign: bool=False) -> int:
@@ -93,11 +94,22 @@ def get_pixels_hexlist(img_fpath: str) -> List[Tuple[str]]:
 
 
 def get_pixels_binlist(img_fpath: str) -> List[Tuple[str]]:
-    """Returns a list of 3D tuples with the binary balues that represent the
+    """Returns a list of 3D tuples with the binary values that represent the
     BGR pixel colors."""
     pixels_list = get_pixels_hexlist(img_fpath)
     pixels_list = [
         tuple(bin(int(pixel[i], 16)) for i in range(3))
+        for pixel in pixels_list
+    ]
+    return pixels_list
+
+
+def get_pixels_declist(img_fpath: str) -> List[Tuple[str]]:
+    """Returns a list of 3D tuples with the decimal values that represent the
+    BGR pixel colors."""
+    pixels_list = get_pixels_hexlist(img_fpath)
+    pixels_list = [
+        tuple(int(pixel[i], 16) for i in range(3))
         for pixel in pixels_list
     ]
     return pixels_list
@@ -112,6 +124,19 @@ def convert_to_decimal(pixels_hexlist: list) -> list:
     ]
 
     return pixel_list
+
+
+def parse_channels(pixels_colors: list) -> np.ndarray:
+    """Receives a list of tuples representing the BGR values for each pixel."""
+    pixels_colors = np.array(
+        [ np.array(list(pixel)) for pixel in pixels_colors ]
+    )
+
+    blue_channel  = pixels_colors[:,0]
+    green_channel = pixels_colors[:,1]
+    red_channel   = pixels_colors[:,2]
+
+    return blue_channel, green_channel, red_channel
 
 
 # def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:

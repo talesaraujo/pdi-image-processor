@@ -1,8 +1,6 @@
 """Logic related to the Huffman Coding process."""
-from typing import Any, List
-from loguru import logger
-
-from pprint import pprint
+from typing import Any, List, Tuple
+from image_processor.core import sampling
 
 import numpy as np
 
@@ -77,8 +75,8 @@ class HuffmanCoding:
             # Re-sort the queue by freq/prob
             priority_queue.sort()
 
-        logger.debug("HUFFMAN TREE")
-        logger.debug(priority_queue[0])
+        # logger.debug("HUFFMAN TREE")
+        # logger.debug(priority_queue[0])
         return priority_queue[0]
 
 
@@ -124,7 +122,36 @@ class HuffmanCoding:
         encoded_strings = np.array(encoded_strings, dtype=str)
         encoded_strings = encoded_strings[np.argsort(encoded_strings[:, 0])]
 
-        for symb, string in encoded_strings:
-            logger.debug(f"VALUE {symb:3} | CODE {string:15}")
+        # for symb, string in encoded_strings:
+        #     logger.debug(f"VALUE {symb:3} | CODE {string:15}")
         
         return encoded_strings
+
+
+    @classmethod
+    def encode(cls, bgr_channels: Tuple[np.ndarray]) -> None:
+        """Returns the file according to the huffman tree codes."""
+        # Add separator symbol to freqs, represented by 256
+        bgr_channels = tuple(np.append(ch, 256) for ch in bgr_channels)
+        
+        # Generate histogram frequencies for each channel
+        blue_hist  = sampling.histogram(bgr_channels[0], L=257)
+        green_hist = sampling.histogram(bgr_channels[1], L=257)
+        red_hist   = sampling.histogram(bgr_channels[2], L=257)
+
+        # Generate Huffman Tree for each channel freq list
+        b_ch_htree = cls.generate_tree(blue_hist)
+        g_ch_htree = cls.generate_tree(green_hist)
+        r_ch_htree = cls.generate_tree(red_hist)
+
+        # Get the codes that matches the given symbols
+        b_ch_codes = cls.get_codes(b_ch_htree)
+        g_ch_codes = cls.get_codes(g_ch_htree)
+        r_ch_codes = cls.get_codes(r_ch_htree)
+
+        # print(b_ch_codes)
+
+        for element in b_ch_codes:
+            if int(element[0]) == 256:
+                print(element)
+
