@@ -120,11 +120,12 @@ class HuffmanCoding:
         dfs_traverse(huffman_tree, code_string="")
 
         encoded_strings = np.array(encoded_strings, dtype=str)
+        encoded_strings = np.array(
+            [np.array([pair[0].zfill(3), pair[1]]) for pair in encoded_strings]
+        )
         encoded_strings = encoded_strings[np.argsort(encoded_strings[:, 0])]
-
         # for symb, string in encoded_strings:
-        #     logger.debug(f"VALUE {symb:3} | CODE {string:15}")
-        
+        #     logger.debug(f"VALUE {symb:3} | CODE {string:15}")        
         return encoded_strings
 
 
@@ -133,7 +134,7 @@ class HuffmanCoding:
         """Returns the file according to the huffman tree codes."""
         # Add separator symbol to freqs, represented by 256
         bgr_channels = tuple(np.append(ch, 256) for ch in bgr_channels)
-        
+
         # Generate histogram frequencies for each channel
         blue_hist  = sampling.histogram(bgr_channels[0], L=257)
         green_hist = sampling.histogram(bgr_channels[1], L=257)
@@ -149,9 +150,10 @@ class HuffmanCoding:
         g_ch_codes = cls.get_codes(g_ch_htree)
         r_ch_codes = cls.get_codes(r_ch_htree)
 
-        # print(b_ch_codes)
+        print(b_ch_codes)
 
-        for element in b_ch_codes:
-            if int(element[0]) == 256:
-                print(element)
+        # for element in b_ch_codes:
+        #     if int(element[0]) == 256:
+        #         print(element)
+
 
