@@ -139,6 +139,13 @@ def parse_channels(pixels_colors: list) -> np.ndarray:
     return blue_channel, green_channel, red_channel
 
 
+def convert_pixels_to_bytes(pixels_list):
+    pixels_list_bytes = [
+        (value).to_bytes(2, byteorder='little') for pixel in pixels_list for value in pixel 
+    ]
+    return b''.join(pixels_list_bytes)
+
+
 # def parse_imgfile(filepath: str) -> Tuple[List[bytes], List[bytes], List[bytes]]:
 #     """TODO: Fill in"""
 #     pixel_data_offset = read_file_slice(

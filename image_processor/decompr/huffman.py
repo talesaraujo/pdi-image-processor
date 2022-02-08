@@ -2,6 +2,7 @@
 from typing import Any, List, Tuple
 from image_processor.core import sampling
 
+import sys
 import pickle
 import numpy as np
 
@@ -32,7 +33,7 @@ class Node:
         return self.prob < other.prob 
 
 
-class HuffmanCoding:
+class HuffmanStrategy:
 
     @staticmethod
     def generate_tree(freqs: np.ndarray) -> List[Node]:
@@ -133,7 +134,7 @@ class HuffmanCoding:
     @staticmethod
     def codes_as_dict(huffman_codes: np.ndarray) -> dict:
         """Converts np array of huffman optimal codes to dict."""
-        return { item[0]: item[1] for item in huffman_codes }
+        return { int(item[0]): item[1] for item in huffman_codes }
 
 
     @classmethod
@@ -152,23 +153,67 @@ class HuffmanCoding:
         g_ch_htree = cls.generate_tree(green_hist)
         r_ch_htree = cls.generate_tree(red_hist)
 
-        # Get the codes that matches the given symbols
+        # Get the codes for each Huffman Tree
         b_ch_codes = cls.get_codes(b_ch_htree)
         g_ch_codes = cls.get_codes(g_ch_htree)
         r_ch_codes = cls.get_codes(r_ch_htree)
 
-        print(b_ch_codes); print("")
+        # # TODO: Save the binary trees
+        # # Get the binary representation of the huffman trees
+        # b_ch_codes_pkl = pickle.dumps(b_ch_codes)
+        # g_ch_codes_pkl = pickle.dumps(g_ch_codes)
+        # r_ch_codes_pkl = pickle.dumps(r_ch_codes)
 
-        b_ch_codes_pkl = pickle.dumps(b_ch_codes)
-        g_ch_codes_pkl = pickle.dumps(g_ch_codes)
-        r_ch_codes_pkl = pickle.dumps(r_ch_codes)
+        # Create mapping object to new codes
+        b_ch_codes_mapping = cls.codes_as_dict(b_ch_codes)
+        g_ch_codes_mapping = cls.codes_as_dict(g_ch_codes)
+        r_ch_codes_mapping = cls.codes_as_dict(r_ch_codes)
 
-        # print(b_ch_codes_pkl)
-        b_ch_codes_back = pickle.loads(b_ch_codes_pkl)
+        encoded_b_channel = [
+            b_ch_codes_mapping[item] for item in bgr_channels[0]
+        ]
+        encoded_g_channel = [
+            g_ch_codes_mapping[item] for item in bgr_channels[1]
+        ]
+        encoded_r_channel = [
+            r_ch_codes_mapping[item] for item in bgr_channels[2]
+        ]
 
-        print(b_ch_codes_back)
+        b_ch_long_bin_string = "".join(encoded_b_channel)
+        g_ch_long_bin_string = "".join(encoded_g_channel)
+        r_ch_long_bin_string = "".join(encoded_r_channel)
 
-        # print(len(b_ch_codes_pkl))
-        # print(len(g_ch_codes_pkl))
-        # print(len(r_ch_codes_pkl))
-        # print(len(b_ch_codes_pkl) + len(g_ch_codes_pkl) + len(r_ch_codes_pkl))
+        print(cls.get_size_of(b_ch_long_bin_string))
+
+        final_obj = {
+            42: {
+                "t_c": b_ch_codes,
+                "v": b_ch_long_bin_string
+            },
+            71: {
+                "t_c": g_ch_codes,
+                "v": g_ch_long_bin_string   
+            },
+            82: {
+                "t_c": r_ch_codes,
+                "v": r_ch_long_bin_string
+            }
+        }
+
+        return final_obj
+
+        
+
+    @staticmethod
+    def convert_chain_to_bytes(bin_repr: str) -> bytes:
+        bytes_repr = int(bin_repr, 2)
+        bytes_repr = bytes_repr(bytes_repr.bit_length()+7, byteorder="big")
+        return bytes_repr
+    
+
+    @staticmethod
+    def get_size_of(bin_repr: str) -> int:
+        sizes = []
+        for ch in bin_repr:
+            sizes.append(sys.getsizeof(ch))
+        return sum(sizes)

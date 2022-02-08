@@ -133,3 +133,8 @@ dmypy.json
 
 # temporary files
 temp
+
+# compressed files
+*.lzw
+*.hff
+*_uncompressed.bmp

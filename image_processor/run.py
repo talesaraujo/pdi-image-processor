@@ -3,17 +3,18 @@ import sys; sys.path.insert(1, os.path.join(sys.path[0], '..'))
 # import argparse
 import numpy as np
 import imgio
+import pickle
 
 from image_processor import ImageContext
-from decompr.huffman import HuffmanCoding
+from decompr.huffman import HuffmanStrategy
+from decompr.lzw import LZWStrategy
 from decompr import img_parser
 from core import intensity, filtering, kernels, sampling
 from typing import Any
 
 BENCHIMAGE_PATH = 'imgs/benchmark.bmp'
+# BENCHIMAGE_PATH = 'imgs/ladybird.bmp'
 
-
-# TODO: Create CLI (maybe?)
 
 if __name__ == '__main__':
 
@@ -24,10 +25,12 @@ if __name__ == '__main__':
     # Num bits actually used by image data
     # 6819840
 
-    pixels_dec = img_parser.get_pixels_declist(BENCHIMAGE_PATH)
+    LZWStrategy.compress_file(BENCHIMAGE_PATH)
+    LZWStrategy.decompress_file(f"{BENCHIMAGE_PATH[:-4]}.lzw")
 
-    blue_channel, green_channel, red_channel = img_parser.parse_channels(pixels_dec)
 
-    HuffmanCoding.encode(
-        (blue_channel, green_channel, red_channel)
-    )
+    # def int_to_bytes(x: int) -> bytes:
+    #     return x.to_bytes((x.bit_length() + 7) // 8, 'big')
+        
+    # def int_from_bytes(xbytes: bytes) -> int:
+    #     return int.from_bytes(xbytes, 'big')
