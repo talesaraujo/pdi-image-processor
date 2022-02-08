@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 import numpy as np
 import pickle
-from decompr import img_parser, constants
+from image_processor.decompr import img_parser, constants
 
 
 class LZWStrategy:
@@ -82,7 +82,7 @@ class LZWStrategy:
 
 
     @classmethod
-    def compress_file(cls, img_path: str) -> None:
+    def compress_file(cls, img_path: str) -> str:
         """"""
         pixels_dec = img_parser.get_pixels_declist(img_path)
 
@@ -122,12 +122,16 @@ class LZWStrategy:
 
         raw_data = pickle.dumps(compressed_channels)
 
-        with open(f"{img_path[:-4]}.lzw", 'wb') as img_comp:
+        c_filename = f"{img_path[:-4]}.lzw"
+
+        with open(c_filename, 'wb') as img_comp:
             img_comp.write(raw_data)
+
+        return c_filename
 
 
     @classmethod
-    def decompress_file(cls, c_img_path: str) -> None:
+    def decompress_file(cls, c_img_path: str) -> str:
         """"""
         with open(c_img_path, 'rb') as c_imgfile:
             c_img_file_bytes = c_imgfile.read()
@@ -171,5 +175,9 @@ class LZWStrategy:
 
         print(header_values[22:26])
 
-        with open(f"{c_img_path[:-4]}_uncompressed.bmp", 'wb') as uncomp_img:
+        restored_img_path = f"{c_img_path[:-4]}_uncompressed.bmp"
+
+        with open(restored_img_path, 'wb') as uncomp_img:
             uncomp_img.write(bgr_values_bytes)
+        
+        return restored_img_path

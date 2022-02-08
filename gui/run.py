@@ -6,6 +6,7 @@ import PySimpleGUI as sg
 
 from image_processor import ImageContext, imgio
 from image_processor.core import intensity, sampling, filtering, kernels
+from image_processor.decompr import huffman, lzw,img_parser
 from gui import inputs
 
 
@@ -15,7 +16,7 @@ ALLOWED_EXTENSIONS = [
     ".png"
 ]
 
-BLANK_CANVAS = np.full((768, 1366), 240)
+BLANK_CANVAS = np.full((768, 1366), 217)
 
 sg.ChangeLookAndFeel('Default1')     
 sg.set_options(
@@ -85,6 +86,12 @@ MENU_DEF = [
         ]
     ],
     [
+        'Compression', [
+            'Compress Image',
+            'Decompress Image'
+        ],
+    ],
+    [
         'Help', [
             'About'
         ]
@@ -133,6 +140,7 @@ while True:
         img_path = sg.popup_get_file('File to open', no_window=True)
 
         if img_path:
+            icontext.image_path = img_path
             icontext.load_image(img_path)
             main_window["IMAGE"].update(cv.imencode('.png', icontext.image)[1].tobytes())
 
@@ -458,3 +466,20 @@ while True:
 
         else:
             sg.popup_error("No loaded image to apply effect!")
+    
+    elif event == "Compress Image":
+        if icontext.image is not None:
+            sg.popup_quick("Compressing Image...")
+            compressed_path = lzw.LZWStrategy.compress_file(icontext.image_path)
+            sg.popup_ok(f"Compressed image stored at {compressed_path}.")
+        else:
+            sg.popup_error("No loaded image to compress!")
+            
+
+    elif event == "Decompress Image":
+        comp_img_path = sg.popup_get_file('Compressed image to open:', no_window=True)
+
+        if comp_img_path:
+            compressed_path = lzw.LZWStrategy.decompress_file(comp_img_path)
+            sg.popup_quick("Uncompressing Image...")
+            sg.popup_ok(f"Original image restored at {compressed_path}.")

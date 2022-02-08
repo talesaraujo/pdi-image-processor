@@ -11,6 +11,7 @@ class ImageContext:
     def __init__(self, image: Any=None) -> None:
         self.image = image
         self.prev_state = np.array(self.image, copy=True)
+        self.image_path = ""
 
 
     @classmethod
